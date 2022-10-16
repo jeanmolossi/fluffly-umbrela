@@ -34,10 +34,18 @@ export class AuthController {
 	}
 
 	@Post('logout')
-	@UseGuards(JwtAuthGuard)
 	@ApiBasicAuth('oauth')
-	async logout() {
-		return this.authService.logout();
+	async logout(
+		@Request() request: eRequest,
+		@Response() response: eResponse
+	) {
+		await this.authService.logout(
+			request.cookies['oauth'] ?? request.headers.authorization
+		);
+
+		response.cookie('oauth', '', { expires: new Date(0) });
+
+		return response.status(HttpStatus.ACCEPTED).send();
 	}
 
 	@Get('me')

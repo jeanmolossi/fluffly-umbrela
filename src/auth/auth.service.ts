@@ -82,16 +82,24 @@ export class AuthService {
 
 		const decoder = this.jwtService.verify.bind(this.jwtService);
 
-		if (!session || session.attachDecoder(decoder).isExpired())
+		if (!session || session.attachDecoder(decoder).isExpired()) {
+			if (session) await this.deleteSession.run(session.id);
 			throw new UnauthorizedErr('Unauthorized');
+		}
 
 		const user = await this.findOneUser.run({ id: session.user_id });
 
 		return done(user);
 	}
 
-	async logout() {
-		return `This action returns all auth`;
+	async logout(basic_token: string) {
+		if (!basic_token) return {};
+
+		const { session_id } = Session.extractInfo(basic_token);
+
+		await this.deleteSession.run(session_id);
+
+		return {};
 	}
 
 	async me(user: User) {
