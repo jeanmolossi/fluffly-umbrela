@@ -15,7 +15,12 @@ export class CreateSessionRepository implements Sessions.CreateRepository {
 		const isset_session = await this.sessionAlreadyExists(session.user_id);
 		if (isset_session) return isset_session;
 
-		const orm_session = this.sessionRepository.create(session);
+		const orm_session = this.sessionRepository.create({
+			user_id: session.user_id,
+			session_id: session.id,
+			refresh_token: session.refresh_token,
+			session_token: session.session_token
+		});
 
 		const { user_id, session_id, session_token, refresh_token } =
 			await this.sessionRepository.save(orm_session);
