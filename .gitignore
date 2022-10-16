@@ -1,0 +1,9 @@
+node_modules/
+.vscode/
+.idea/
+dist/
+coverage/
+.docker/dbdata/
+
+.env.*.local
+!.env.example

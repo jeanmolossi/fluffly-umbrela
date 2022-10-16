@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+    fluffly_umbrela_api:
+        container_name: fluffly_umbrela_api
+        build: .
+        volumes:
+            - ./src:/home/app/src
+            - ./node_modules:/home/app/node_modules
+            - ./dist:/home/app/dist
+            - ./.env.development.local:/home/app/.env.development.local
+        ports:
+            - "3000:3000"
+        command: sh -c "yarn start:dev"
+        env_file:
+            - .env.development.local
+        environment:
+            - NODE_ENV=development
+        networks:
+            - api-net
+
+    fluffly_umbrela_db:
+        container_name: fluffly_umbrela_db
+        build: .docker/postgres
+        ports:
+            - "5432:5432"
+        volumes:
+            - .docker/dbdata:/var/lib/postgresql/data
+        environment:
+            - POSTGRES_PASSWORD=postgres
+            - POSTGRES_USER=postgres
+            - POSTGRES_DB=fluffly_umbrela_db
+        networks:
+            - api-net
+
+networks:
+    api-net:
+        driver: bridge
