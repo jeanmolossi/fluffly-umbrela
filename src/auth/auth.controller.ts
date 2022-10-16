@@ -8,8 +8,9 @@ import {
 	Response,
 	UseGuards
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBasicAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { Request as eRequest, Response as eResponse } from 'express';
+import { Credentials } from './adapter/credentials';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './infra/guards/jwt-auth.guard';
 import { LocalAuthGuard } from './infra/guards/local-auth.guard';
@@ -21,6 +22,7 @@ export class AuthController {
 
 	@Post('login')
 	@UseGuards(LocalAuthGuard)
+	@ApiBody({ required: true, type: Credentials })
 	async login(@Request() request: eRequest, @Response() response: eResponse) {
 		const user = request.user as User;
 		const session = await this.authService.login(user);
@@ -33,12 +35,14 @@ export class AuthController {
 
 	@Post('logout')
 	@UseGuards(JwtAuthGuard)
+	@ApiBasicAuth('oauth')
 	async logout() {
 		return this.authService.logout();
 	}
 
 	@Get('me')
 	@UseGuards(JwtAuthGuard)
+	@ApiBasicAuth('oauth')
 	async me(@Request() request: eRequest) {
 		return this.authService.me(request.user as User);
 	}
