@@ -1,4 +1,7 @@
-import { UnauthorizedErr } from '@/shared/domain/http-errors';
+import {
+	InternalServerErr,
+	UnauthorizedErr
+} from '@/shared/domain/http-errors';
 import { User, Users } from '@/users/domain';
 import { FindOneRepository } from '@/users/infra/repository/find-one.repository';
 import { Inject, Injectable } from '@nestjs/common';
@@ -7,6 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Credentials } from './adapter/credentials';
 import { Session, Sessions } from './domain';
 import { CreateSessionRepository } from './infra/repository/create.repository';
+import { DeleteSessionRepository } from './infra/repository/delete.repository';
 import { FindOneSessionRepository } from './infra/repository/find-one.repository';
 
 type DoneCb = (user: User, info?: any) => void;
@@ -21,7 +25,9 @@ export class AuthService {
 		@Inject(CreateSessionRepository)
 		private readonly create: Sessions.CreateRepository,
 		@Inject(FindOneSessionRepository)
-		private readonly findOneSession: Sessions.FindOneRepository
+		private readonly findOneSession: Sessions.FindOneRepository,
+		@Inject(DeleteSessionRepository)
+		private readonly deleteSession: Sessions.DeleteRepository
 	) {}
 
 	async validateUser(credentials: Credentials) {
@@ -37,6 +43,21 @@ export class AuthService {
 	}
 
 	async login(user: User) {
+		const isset_session = await this.findOneSession.run({
+			user_id: user.id
+		});
+
+		if (isset_session) {
+			isset_session.attachDecoder(
+				this.jwtService.verify.bind(this.jwtService)
+			);
+
+			if (isset_session.isExpired()) {
+				if (!(await this.deleteSession.run(isset_session.id)))
+					throw new InternalServerErr('Can not login, try again');
+			}
+		}
+
 		const payload = { email: user.email };
 
 		const session_token = this.getAccessToken(payload, user);
@@ -44,6 +65,7 @@ export class AuthService {
 
 		const session = await this.create.run(
 			new Session({
+				session_id: isset_session?.id,
 				session_token,
 				refresh_token,
 				user_id: user.id
@@ -81,7 +103,7 @@ export class AuthService {
 		return this.jwtService.sign(payload, {
 			subject: user.id,
 			issuer: 'session',
-			expiresIn: this.config.get('ACCESS_TOKEN_EXPIRES'),
+			expiresIn: 15,
 			secret: this.config.get('ACCESS_TOKEN_SECRET')
 		});
 	}
