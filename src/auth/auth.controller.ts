@@ -32,13 +32,14 @@ export class AuthController {
 	}
 
 	@Post('logout')
+	@UseGuards(JwtAuthGuard)
 	async logout() {
 		return this.authService.logout();
 	}
 
 	@Get('me')
 	@UseGuards(JwtAuthGuard)
-	async me() {
-		return this.authService.me();
+	async me(@Request() request: eRequest) {
+		return this.authService.me(request.user as User);
 	}
 }
