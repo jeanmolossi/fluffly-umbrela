@@ -8,12 +8,17 @@ export namespace Sessions {
 		refresh_token: string;
 	}
 
+	export interface Info {
+		user_id: string;
+		session_id: string;
+	}
+
 	export interface CreateRepository {
 		run(session: Session): Promise<Session>;
 	}
 
 	export interface FindOneRepository {
-		run(session: Partial<Session>): Promise<Session>;
+		run(session: Partial<Model>): Promise<Session>;
 	}
 
 	export type Updater = (session: Session) => Session;
