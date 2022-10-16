@@ -1,7 +1,4 @@
-import {
-	InternalServerErr,
-	UnauthorizedErr
-} from '@/shared/domain/http-errors';
+import { UnauthorizedErr } from '@/shared/domain/http-errors';
 import { randomUUID } from 'crypto';
 import { Sessions } from './namespace';
 
@@ -45,6 +42,17 @@ export class Session {
 		return Buffer.from(`${user_id}:${session_id}`).toString('base64');
 	}
 
+	static extractInfo(basic_token: string): Sessions.Info {
+		const decoded = Buffer.from(basic_token, 'base64').toString('ascii');
+
+		const [user_id, session_id] = decoded.split(':');
+
+		return {
+			user_id,
+			session_id
+		};
+	}
+
 	attachDecoder(decoder: Sessions.Decoder): Session {
 		this._decoder = decoder;
 		return this;
@@ -82,7 +90,7 @@ export class Session {
 
 	private hasDecoder(context: string): boolean {
 		if (!this._decoder) {
-			throw new InternalServerErr(
+			throw new TypeError(
 				`You should attach a decoder to use ${context} method`
 			);
 		}
