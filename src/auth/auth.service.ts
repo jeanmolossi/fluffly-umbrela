@@ -7,6 +7,9 @@ import { JwtService } from '@nestjs/jwt';
 import { Credentials } from './adapter/credentials';
 import { Session, Sessions } from './domain';
 import { CreateSessionRepository } from './infra/repository/create.repository';
+import { FindOneSessionRepository } from './infra/repository/find-one.repository';
+
+type DoneCb = (user: User, info?: any) => void;
 
 @Injectable()
 export class AuthService {
@@ -14,15 +17,17 @@ export class AuthService {
 		private readonly config: ConfigService,
 		private readonly jwtService: JwtService,
 		@Inject(FindOneRepository)
-		private readonly findOne: Users.FindOneRepository,
+		private readonly findOneUser: Users.FindOneRepository,
 		@Inject(CreateSessionRepository)
-		private readonly create: Sessions.CreateRepository
+		private readonly create: Sessions.CreateRepository,
+		@Inject(FindOneSessionRepository)
+		private readonly findOneSession: Sessions.FindOneRepository
 	) {}
 
 	async validateUser(credentials: Credentials) {
 		const { email } = credentials;
 
-		const user = await this.findOne.run({ email });
+		const user = await this.findOneUser.run({ email });
 
 		if (!user.isValidPassword(credentials.password)) {
 			throw new UnauthorizedErr('Invalid credentials');
@@ -48,12 +53,28 @@ export class AuthService {
 		return session;
 	}
 
+	async validateSession(basic_token: string, done: DoneCb) {
+		const session = await this.findOneSession.run(
+			Session.extractInfo(basic_token)
+		);
+
+		const decoder = this.jwtService.verify.bind(this.jwtService);
+
+		if (!session || session.attachDecoder(decoder).isExpired())
+			throw new UnauthorizedErr('Unauthorized');
+
+		const user = await this.findOneUser.run({ id: session.user_id });
+
+		return done(user);
+	}
+
 	async logout() {
 		return `This action returns all auth`;
 	}
 
-	async me() {
-		return `This action returns a #${'id'} auth`;
+	async me(user: User) {
+		const { id, name, email, avatar } = user;
+		return { id, name, email, avatar };
 	}
 
 	private getAccessToken(payload: object, user: User): string {
