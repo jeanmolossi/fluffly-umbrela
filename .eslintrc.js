@@ -10,7 +10,7 @@ module.exports = {
 		ecmaVersion: 'latest',
 		sourceType: 'module'
 	},
-	plugins: ['@typescript-eslint', 'prettier'],
+	plugins: ['@typescript-eslint', 'prettier', 'eslint-plugin-import-helpers'],
 	rules: {
 		'prettier/prettier': 'error',
 		indent: 'off',
@@ -31,6 +31,25 @@ module.exports = {
 				format: ['snake_case', 'camelCase'],
 				leadingUnderscore: 'allow',
 				trailingUnderscore: 'allow'
+			}
+		],
+		'import-helpers/order-imports': [
+			'error',
+			{
+				newlinesBetween: 'never',
+				groups: [
+					'module',
+					'/^@\\/.+/',
+					'/^@\\/presentation/',
+					'/^@\\/infra/',
+					'/^@\\/data/',
+					'/^@\\/domain/',
+					'sibling',
+					'parent',
+					'index',
+					'/\\.+/'
+				],
+				alphabetize: { order: 'asc', ignoreCase: true }
 			}
 		]
 	}

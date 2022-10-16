@@ -1,38 +1,38 @@
-import { ValidationPipe } from "@nestjs/common";
-import { NestFactory } from "@nestjs/core";
-import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
-import * as cookieParser from "cookie-parser";
-import helmet from "helmet";
+import { ValidationPipe } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as cookieParser from 'cookie-parser';
+import helmet from 'helmet';
 import 'reflect-metadata';
-import { AppModule } from "./app.module";
-import { HttpExceptionFilter } from "./shared/infra/http-exception.filter";
+import { AppModule } from './app.module';
+import { HttpExceptionFilter } from './shared/infra/http-exception.filter';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule, {
-		logger: ["log", "error", "warn", "debug"],
+		logger: ['log', 'error', 'warn', 'debug'],
 		autoFlushLogs: true,
-		bufferLogs: true,
+		bufferLogs: true
 	});
 
 	app.enableCors({
-		origin: ["http://localhost"],
+		origin: ['http://localhost'],
 		credentials: true,
-		allowedHeaders: ["x-timestamp", "x-hash"],
+		allowedHeaders: ['x-timestamp', 'x-hash']
 	});
 	app.use(helmet());
 	app.use(cookieParser());
 
-	app.useGlobalPipes(new ValidationPipe({ transform: true }))
+	app.useGlobalPipes(new ValidationPipe({ transform: true }));
 	app.useGlobalFilters(new HttpExceptionFilter());
 
 	const config = new DocumentBuilder()
-		.setTitle("Fluffy Umbrela")
-		.setDescription("The financial complete API to manage your finances")
-		.setVersion("1.0")
+		.setTitle('Fluffy Umbrela')
+		.setDescription('The financial complete API to manage your finances')
+		.setVersion('1.0')
 		.build();
 
 	const document = SwaggerModule.createDocument(app, config);
-	SwaggerModule.setup("swagger", app, document);
+	SwaggerModule.setup('swagger', app, document);
 
 	await app.listen(3000);
 }
