@@ -1,33 +1,35 @@
+import { AuthService } from '@/auth/auth.service';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
-import { ExtractJwt, Strategy } from 'passport-jwt';
+import { ExtractJwt } from 'passport-jwt';
+import { JwtStrategyBase } from './jwt-base.strategy';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
-	constructor(private readonly config: ConfigService) {
-		super({
-			jwtFromRequest: ExtractJwt.fromExtractors([
-				JwtStrategy.fromCookies,
-				JwtStrategy.fromBasicHeader
-			]),
-			ignoreExpiration: false,
-			secretOrKey: config.get('ACCESS_TOKEN_SECRET')
-		});
+export class JwtStrategy extends PassportStrategy(JwtStrategyBase) {
+	constructor(
+		private readonly config: ConfigService,
+		private readonly authService: AuthService
+	) {
+		super(
+			{
+				jwtFromRequest: ExtractJwt.fromExtractors([
+					JwtStrategy.fromCookies,
+					JwtStrategy.fromBasicHeader
+				]),
+				ignoreExpiration: false,
+				secretOrKey: config.get('ACCESS_TOKEN_SECRET')
+			},
+			authService.validateSession.bind(authService)
+		);
 	}
 
-	async validate(payload: any) {
-		return { userId: payload.sub, username: payload.username };
-	}
-
-	private static fromCookies(request: Request): string {
-		console.log(request.cookies['oauth']);
-		return ''; // request.cookies['oauth'];
+	private static fromCookies(request: Request) {
+		return request.cookies['oauth'];
 	}
 
 	private static fromBasicHeader(request: Request): string {
-		console.log(request.headers.authorization);
-		return '';
+		return request.headers.authorization;
 	}
 }
