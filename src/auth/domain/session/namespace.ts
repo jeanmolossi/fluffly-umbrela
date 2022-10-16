@@ -21,6 +21,10 @@ export namespace Sessions {
 		run(session: Partial<Model>): Promise<Session>;
 	}
 
+	export interface DeleteRepository {
+		run(session_id: string): Promise<boolean>;
+	}
+
 	export type Updater = (session: Session) => Session;
 	export interface RefreshSession {
 		run(session_id: string, updateCb: Updater): Promise<Session>;
