@@ -1,12 +1,12 @@
+import { Inject, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import {
 	InternalServerErr,
 	UnauthorizedErr
 } from '@/shared/domain/http-errors';
 import { User, Users } from '@/users/domain';
 import { FindOneRepository } from '@/users/infra/repository/find-one.repository';
-import { Inject, Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
 import { Credentials } from './adapter/credentials';
 import { Session, Sessions } from './domain';
 import { CreateSessionRepository } from './infra/repository/create.repository';
@@ -111,7 +111,7 @@ export class AuthService {
 		return this.jwtService.sign(payload, {
 			subject: user.id,
 			issuer: 'session',
-			expiresIn: 15,
+			expiresIn: this.config.get('ACCESS_TOKEN_EXPIRES'),
 			secret: this.config.get('ACCESS_TOKEN_SECRET')
 		});
 	}
@@ -121,7 +121,7 @@ export class AuthService {
 			subject: user.id,
 			issuer: 'refresh',
 			expiresIn: this.config.get('REFRESH_TOKEN_SECRET'),
-			secret: this.config.get('REFRESH_TOKEN_SECRET')
+			secret: this.config.get('REFRESH_TOKEN_EXPIRES')
 		});
 	}
 }
