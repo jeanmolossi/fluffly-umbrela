@@ -10,6 +10,7 @@ import { ApiBasicAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { Request as eRequest, Response as eResponse } from 'express';
 import { HttpStatus } from '@/shared/domain/http-status';
 import { addMinutes } from '@/shared/helpers/date-math';
+import constants from '@/shared/shared.constants';
 import { User } from '@/users/domain';
 import { Credentials } from './adapter/credentials';
 import { AuthService } from './auth.service';
@@ -28,32 +29,33 @@ export class AuthController {
 		const user = request.user as User;
 		const session = await this.authService.login(user);
 
-		response.cookie('oauth', session.oauth, {
+		response.cookie(constants.AUTH_TOKEN, session.oauth, {
 			expires: addMinutes(new Date(), 15)
 		});
-		response.setHeader('oauth', session.oauth);
+		response.setHeader(constants.AUTH_TOKEN, session.oauth);
 
 		return response.status(HttpStatus.CREATED).send();
 	}
 
 	@Post('logout')
-	@ApiBasicAuth('oauth')
+	@ApiBasicAuth(constants.AUTH_TOKEN)
 	async logout(
 		@Request() request: eRequest,
 		@Response() response: eResponse
 	) {
 		await this.authService.logout(
-			request.cookies['oauth'] ?? request.headers.authorization
+			request.cookies[constants.AUTH_TOKEN] ??
+				request.headers.authorization
 		);
 
-		response.cookie('oauth', '', { expires: new Date(0) });
+		response.cookie(constants.AUTH_TOKEN, '', { expires: new Date(0) });
 
 		return response.status(HttpStatus.ACCEPTED).send();
 	}
 
 	@Get('me')
 	@UseGuards(JwtAuthGuard)
-	@ApiBasicAuth('oauth')
+	@ApiBasicAuth(constants.AUTH_TOKEN)
 	async me(@Request() request: eRequest) {
 		return this.authService.me(request.user as User);
 	}

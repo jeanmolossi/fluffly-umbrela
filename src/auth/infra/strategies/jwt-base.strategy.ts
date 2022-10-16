@@ -1,6 +1,6 @@
-import { User } from '@/users/domain';
 import { Request } from 'express';
 import { Strategy } from 'passport-strategy';
+import { User } from '@/users/domain';
 
 type Extractor = (request: Request) => string;
 
