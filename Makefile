@@ -6,7 +6,7 @@ usage:
 
 .PHONY: run
 run:
-	./scripts/gen-envs
+	@./scripts/gen-envs
 	docker-compose up -d
 
 .PHONY: stop
