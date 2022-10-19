@@ -1,22 +1,22 @@
-import { OTP } from "./otp";
+import { OTP } from './otp';
 
-describe("Domain > OTP", function () {
-	test("should generate an hmac", function () {
+describe('Domain > OTP', function () {
+	test('should generate an hmac', function () {
 		const want = {
-			email: "john@doe.com",
+			email: 'john@doe.com',
 			otp: 123456,
-			timestamp: Date.now() + 1000 * 60 * 60, // 1 hour at future,
+			timestamp: Date.now() + 1000 * 60 * 60 // 1 hour at future,
 		};
 
 		const otp = new OTP({ ...want });
 		expect(otp.generate()).not.toBeFalsy();
 	});
 
-	test("should validate hmac", function () {
+	test('should validate hmac', function () {
 		const want = {
-			email: "john@doe.com",
+			email: 'john@doe.com',
 			otp: 123456,
-			timestamp: Date.now() + 1000 * 60 * 60, // 1 hour at future,
+			timestamp: Date.now() + 1000 * 60 * 60 // 1 hour at future,
 		};
 
 		const otp = new OTP({ ...want });
@@ -25,11 +25,11 @@ describe("Domain > OTP", function () {
 		expect(otp.isValid(hash)).toBe(true);
 	});
 
-	test("should return false to expired hmac", function () {
+	test('should return false to expired hmac', function () {
 		const want = {
-			email: "john@doe.com",
+			email: 'john@doe.com',
 			otp: 123456,
-			timestamp: Date.now() - 1000 * 60 * 60, // 1 hour at future,
+			timestamp: Date.now() - 1000 * 60 * 60 // 1 hour at future,
 		};
 
 		const otp = new OTP({ ...want });

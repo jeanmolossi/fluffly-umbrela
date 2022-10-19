@@ -13,17 +13,17 @@ export namespace Users {
 
 	/**
 	 * PasswordConfirmation is the object used to update user password
-	 * @param {string} currentPassword 	- is actual unencrypted password
-	 * @param {string} newPassword		- is the new one password
-	 * @param {string} reTypedNewPassword- is the new one password confirmation
+	 * @param {string} current_password 	- is actual unencrypted password
+	 * @param {string} new_password			- is the new one password
+	 * @param {string} retyped_new_password	- is the new one password confirmation
 	 */
 	export interface PasswordConfirmation {
-		currentPassword: string;
-		newPassword: string;
-		reTypedNewPassword: string;
+		current_password: string;
+		new_password: string;
+		retyped_new_password: string;
 	}
 
-	export type ResetPassword = Omit<PasswordConfirmation, 'currentPassword'>;
+	export type ResetPassword = Omit<PasswordConfirmation, 'current_password'>;
 
 	export interface CreateRepository {
 		run(user: Model): Promise<User>;

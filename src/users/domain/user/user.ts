@@ -1,10 +1,10 @@
+import { compareSync, hashSync } from 'bcryptjs';
+import { randomUUID } from 'crypto';
 import { Entity } from '@/shared/domain/entity';
 import {
 	InternalServerErr,
 	UnauthorizedErr
 } from '@/shared/domain/http-errors';
-import { compareSync, hashSync } from 'bcryptjs';
-import { randomUUID } from 'crypto';
 import { Users } from './namespace';
 
 export class User extends Entity {
@@ -80,32 +80,32 @@ export class User extends Entity {
 	 * @param {Users.PasswordConfirmation} passwordConfirmation is an object who contains the params used to check update password
 	 */
 	public updatePassword(passwordConfirmation: Users.PasswordConfirmation) {
-		const { currentPassword, newPassword, reTypedNewPassword } =
+		const { current_password, new_password, retyped_new_password } =
 			passwordConfirmation;
 
-		if (newPassword !== reTypedNewPassword) {
+		if (new_password !== retyped_new_password) {
 			throw new InternalServerErr('passwords does not match');
 		}
 
-		if (!this.isValidPassword(currentPassword)) {
+		if (!this.isValidPassword(current_password)) {
 			throw new UnauthorizedErr('invalid credentials');
 		}
 
 		// when all validations pass we re-assign password to new one
-		this._props.password = newPassword;
+		this._props.password = new_password;
 		// after new password re-assign encrypt that
 		this.encrypyPassword();
 	}
 
 	public resetPasswrod(passwordReset: Users.ResetPassword) {
-		const { newPassword, reTypedNewPassword } = passwordReset;
+		const { new_password, retyped_new_password } = passwordReset;
 
-		if (newPassword !== reTypedNewPassword) {
+		if (new_password !== retyped_new_password) {
 			throw new InternalServerErr('passwords does not match');
 		}
 
 		// when all validations pass we re-assign password to new one
-		this._props.password = newPassword;
+		this._props.password = new_password;
 		// after new password re-assign encrypt that
 		this.encrypyPassword();
 	}

@@ -1,5 +1,5 @@
-import { UnauthorizedErr } from '@/shared/domain/http-errors';
 import { randomUUID } from 'crypto';
+import { UnauthorizedErr } from '@/shared/domain/http-errors';
 import { Sessions } from './namespace';
 
 export class Session {

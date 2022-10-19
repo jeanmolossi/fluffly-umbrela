@@ -1,6 +1,6 @@
-import { SharedModule } from '@/shared/shared.module';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { SharedModule } from '@/shared/shared.module';
 import { CreateRepository } from './infra/repository/create.repository';
 import { FindOneRepository } from './infra/repository/find-one.repository';
 import { SaveRepository } from './infra/repository/save.repository';
