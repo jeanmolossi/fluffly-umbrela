@@ -46,8 +46,8 @@ export class ResetPasswordService {
 	private update(password: string, confirm_password: string): Users.Updater {
 		return function (user: User): User {
 			user.resetPasswrod({
-				newPassword: password,
-				reTypedNewPassword: confirm_password
+				new_password: password,
+				retyped_new_password: confirm_password
 			});
 
 			return user;
