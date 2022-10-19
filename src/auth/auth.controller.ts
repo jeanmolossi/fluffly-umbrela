@@ -10,6 +10,7 @@ import { ApiBasicAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { Request as eRequest, Response as eResponse } from 'express';
 import { HttpStatus } from '@/shared/domain/http-status';
 import { addMinutes } from '@/shared/helpers/date-math';
+import { AuthUser } from '@/shared/infra/decorators/user.decorator';
 import constants from '@/shared/shared.constants';
 import { User } from '@/users/domain';
 import { Credentials } from './adapter/credentials';
@@ -56,7 +57,7 @@ export class AuthController {
 	@Get('me')
 	@UseGuards(JwtAuthGuard)
 	@ApiBasicAuth(constants.AUTH_TOKEN)
-	async me(@Request() request: eRequest) {
-		return this.authService.me(request.user as User);
+	async me(@AuthUser() user: User) {
+		return this.authService.me(user);
 	}
 }
