@@ -19,7 +19,10 @@ export function TypeOrmModuleFactory(): DynamicModule {
 			username: config.get('DB_USER'),
 			password: config.get('DB_PASSWORD'),
 			database: config.get('DB_NAME'),
-			entities: [__dirname + '/**/infra/repository/*.entity.{ts,js}'],
+			entities: [
+				__dirname + '/**/infra/repository/*.entity.{ts,js}',
+				__dirname + '/**/infra/repositories/*.entity.{ts,js}'
+			],
 			synchronize: config.get('NODE_ENV') === 'development',
 			logging: ['schema', 'error']
 		} as TypeOrmModuleOptions);

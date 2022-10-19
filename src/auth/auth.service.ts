@@ -120,8 +120,8 @@ export class AuthService {
 		return this.jwtService.sign(payload, {
 			subject: user.id,
 			issuer: 'refresh',
-			expiresIn: this.config.get('REFRESH_TOKEN_SECRET'),
-			secret: this.config.get('REFRESH_TOKEN_EXPIRES')
+			expiresIn: this.config.get('REFRESH_TOKEN_EXPIRES'),
+			secret: this.config.get('REFRESH_TOKEN_SECRET')
 		});
 	}
 }
