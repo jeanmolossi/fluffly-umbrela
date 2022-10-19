@@ -1,13 +1,15 @@
-import { InternalServerErr } from "@/shared/domain/http-errors";
-import { Injectable } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import { readFileSync } from "fs";
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { readFileSync } from 'fs';
 import {
-	createTestAccount, createTransport,
+	createTestAccount,
+	createTransport,
 	getTestMessageUrl,
-	SentMessageInfo, Transporter
+	SentMessageInfo,
+	Transporter
 } from 'nodemailer';
-import Mail from "nodemailer/lib/mailer";
+import Mail from 'nodemailer/lib/mailer';
+import { InternalServerErr } from '@/shared/domain/http-errors';
 
 type From = { name: string; email: string };
 
@@ -31,17 +33,18 @@ export class EmailProvider {
 	constructor(private readonly config: ConfigService) {}
 
 	public async init(): Promise<EmailProvider> {
-		const account = this.config.get("NODE_ENV") == "development"
-			? await createTestAccount()
-			: {
-				user: this.config.get("SMTP_USER"),
-				pass: this.config.get("SMTP_PASS"),
-				smtp: {
-					host: this.config.get("SMTP_HOST"),
-					port: +this.config.get("SMTP_PORT"),
-					secure: Boolean(this.config.get("SMTP_SECURE")),
-				}
-			}
+		const account =
+			this.config.get('NODE_ENV') == 'development'
+				? await createTestAccount()
+				: {
+						user: this.config.get('SMTP_USER'),
+						pass: this.config.get('SMTP_PASS'),
+						smtp: {
+							host: this.config.get('SMTP_HOST'),
+							port: +this.config.get('SMTP_PORT'),
+							secure: Boolean(this.config.get('SMTP_SECURE'))
+						}
+				  };
 
 		this._transporter = createTransport({
 			host: account.smtp.host,
@@ -49,30 +52,30 @@ export class EmailProvider {
 			secure: account.smtp.secure,
 			auth: {
 				user: account.user,
-				pass: account.pass,
-			},
-		})
+				pass: account.pass
+			}
+		});
 
-		return this
+		return this;
 	}
 
 	public setFrom(from: From): EmailProvider {
-		this._from = `"${from.name}" <${from.email}>`
-		return this
+		this._from = `"${from.name}" <${from.email}>`;
+		return this;
 	}
 
 	public setTo(...to: string[]): EmailProvider {
-		this._to = to.join(', ')
+		this._to = to.join(', ');
 		return this;
 	}
 
 	public setSubject(subject: string): EmailProvider {
-		this._subject = subject
+		this._subject = subject;
 		return this;
 	}
 
 	public setText(text: string): EmailProvider {
-		this._text = text
+		this._text = text;
 		return this;
 	}
 
@@ -87,42 +90,47 @@ export class EmailProvider {
 	}
 
 	public setHtml(html: string): EmailProvider {
-		this.alreadyDefinedHtml()
-		this._html = html
+		this.alreadyDefinedHtml();
+		this._html = html;
 		return this;
 	}
 
 	public setHtmlTemplate(path: string): EmailProvider {
-		this.alreadyDefinedHtml()
+		this.alreadyDefinedHtml();
 
-		try { this._html = readFileSync(path).toString() }
-		catch (e) {
-			throw new InternalServerErr(`fail reading file path ${path}: ${e.message}`)
+		try {
+			this._html = readFileSync(path).toString();
+		} catch (e) {
+			throw new InternalServerErr(
+				`fail reading file path ${path}: ${e.message}`
+			);
 		}
 
-		return this
+		return this;
 	}
 
 	private alreadyDefinedHtml() {
 		if (this._htmlSet) {
-			throw new Error("already defined html. Please use setHtml or setHtmlTemplate, do not use both!")
+			throw new Error(
+				'already defined html. Please use setHtml or setHtmlTemplate, do not use both!'
+			);
 		}
 
-		this._htmlSet = true
+		this._htmlSet = true;
 	}
 
 	public setHeaders(headers: Mail.Headers): EmailProvider {
-		this._headers = headers
-		return this
+		this._headers = headers;
+		return this;
 	}
 
 	public setList(list: Mail.ListHeaders): EmailProvider {
-		this._list = list
-		return this
+		this._list = list;
+		return this;
 	}
 
 	public async send(): Promise<string> {
-		this.validate()
+		this.validate();
 
 		const result = await this._transporter.sendMail({
 			from: this._from,
@@ -134,34 +142,26 @@ export class EmailProvider {
 			headers: this._headers,
 			list: this._list,
 			replyTo: this._replyTo,
-			inReplyTo: this._inReplyTo,
-		})
+			inReplyTo: this._inReplyTo
+		});
 
-		console.log(`Message sent: %s`, result.messageId)
-		const previewURL = getTestMessageUrl(result) || "Message not sent"
-		console.log(`Preview URL: %s`, previewURL)
+		console.log(`Message sent: %s`, result.messageId);
+		const preview_url = getTestMessageUrl(result) || 'Message not sent';
+		console.log(`Preview URL: %s`, preview_url);
 
-		return previewURL
+		return preview_url;
 	}
 
 	private validate() {
-		if (!this._from)
-			throw new Error("You should call setFrom")
+		if (!this._from) throw new Error('You should call setFrom');
 
+		if (!this._to) throw new Error('You should call setTo');
 
-		if (!this._to)
-			throw new Error("You should call setTo")
+		if (!this._subject) throw new Error('You should call setSubject');
 
-
-		if (!this._subject)
-			throw new Error("You should call setSubject")
-
-
-		if (!this._text)
-			throw new Error("You should call setText")
-
+		if (!this._text) throw new Error('You should call setText');
 
 		if (!this._htmlSet)
-			throw new Error("You should call setHtml or setHtmlTemplate")
+			throw new Error('You should call setHtml or setHtmlTemplate');
 	}
 }

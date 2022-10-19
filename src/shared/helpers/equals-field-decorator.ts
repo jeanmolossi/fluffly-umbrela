@@ -1,6 +1,13 @@
-import { registerDecorator, ValidationArguments, ValidationOptions } from "class-validator"
+import {
+	registerDecorator,
+	ValidationArguments,
+	ValidationOptions
+} from 'class-validator';
 
-export function EqualsField(fieldName: string, validationOptions?: ValidationOptions) {
+export function EqualsField(
+	fieldName: string,
+	validationOptions?: ValidationOptions
+) {
 	return function (object: Object, propertyName: string) {
 		registerDecorator({
 			name: 'equalsField',
@@ -10,14 +17,14 @@ export function EqualsField(fieldName: string, validationOptions?: ValidationOpt
 			options: validationOptions,
 			validator: {
 				validate(value: any, args: ValidationArguments) {
-					const compare_field = args.object[fieldName]
+					const compare_field = args.object[fieldName];
 
-					return value === compare_field
+					return value === compare_field;
 				},
 				defaultMessage(args: ValidationArguments) {
-					return `Field ${args.property} should match with ${fieldName}`
+					return `Field ${args.property} should match with ${fieldName}`;
 				}
-			},
-		})
-	}
+			}
+		});
+	};
 }

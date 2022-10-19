@@ -1,7 +1,7 @@
-import { Session, Sessions } from '@/auth/domain';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Session, Sessions } from '@/auth/domain';
 import { SessionModel } from './session.entity';
 
 @Injectable()

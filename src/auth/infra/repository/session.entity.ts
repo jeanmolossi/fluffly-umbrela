@@ -1,5 +1,5 @@
-import { UserModel } from '@/users/infra/repository/user.entity';
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { UserModel } from '@/users/infra/repository/user.entity';
 
 @Entity({ name: 'session' })
 export class SessionModel {
