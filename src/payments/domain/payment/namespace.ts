@@ -15,6 +15,7 @@ export namespace Payment {
 
 	export interface Model {
 		id?: string;
+		user_id?: string;
 		name: string;
 		type?: Type;
 		limit?: number;

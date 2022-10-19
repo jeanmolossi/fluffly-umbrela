@@ -2,15 +2,23 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
+	ManyToOne,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn
 } from 'typeorm';
 import { Payment } from '@/payments/domain';
+import { UserModel } from '@/users/infra/repository/user.entity';
 
 @Entity({ name: 'payments' })
 export class PaymentModel {
 	@PrimaryGeneratedColumn('uuid')
 	id: string;
+
+	@Column({ name: 'user_id' })
+	user_id: string;
+
+	@ManyToOne(() => UserModel)
+	user: UserModel;
 
 	@Column()
 	name: string;

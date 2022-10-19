@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
 import { IsEnum, IsNotEmpty, IsNumber } from 'class-validator';
 import { Payment } from '@/payments/domain';
 
@@ -6,6 +7,9 @@ export class AddWallet {
 	@ApiProperty({ example: 'Elo Bradesco 0005' })
 	@IsNotEmpty({ message: 'Name should not be empty' })
 	name: string;
+
+	@Exclude()
+	user_id?: string;
 
 	@ApiProperty({
 		example: Payment.Type.CASH,

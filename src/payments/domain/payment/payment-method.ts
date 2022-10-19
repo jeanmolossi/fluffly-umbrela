@@ -22,6 +22,10 @@ export abstract class PaymentMethod extends Entity {
 		_props.updated_at = _props.updated_at ?? new Date();
 	}
 
+	get user_id(): string {
+		return this._props.user_id;
+	}
+
 	get name(): string {
 		return this._props.name;
 	}
