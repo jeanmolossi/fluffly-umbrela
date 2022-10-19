@@ -31,6 +31,10 @@ module.exports = {
 				format: ['snake_case', 'camelCase'],
 				leadingUnderscore: 'allow',
 				trailingUnderscore: 'allow'
+			},
+			{
+				selector: 'enumMember',
+				format: ['UPPER_CASE']
 			}
 		],
 		'import-helpers/order-imports': [
