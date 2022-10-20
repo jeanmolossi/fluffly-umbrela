@@ -39,10 +39,10 @@ export abstract class PaymentMethod extends Entity {
 	}
 
 	get readable_limit(): string {
-		if (!this.limit) return null;
+		if (!this._props.limit) return null;
 
 		// parse cents to brl
-		const to_brl = this.limit / 100;
+		const to_brl = this._props.limit / 100;
 		return new Intl.NumberFormat('pt-BR', {
 			currency: 'BRL',
 			style: 'currency'

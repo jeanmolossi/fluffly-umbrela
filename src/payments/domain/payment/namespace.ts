@@ -31,4 +31,12 @@ export namespace Payment {
 	export interface FindOneRepository {
 		run(filter: Partial<Model>): Promise<PaymentMethod>;
 	}
+
+	export interface FindRepository {
+		run(
+			filter: Partial<Model>,
+			page?: number,
+			per_page?: number
+		): Promise<{ payments: PaymentMethod[]; total: number }>;
+	}
 }

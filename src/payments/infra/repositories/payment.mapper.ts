@@ -3,7 +3,7 @@ import { PaymentMethod } from '@/payments/domain/payment/payment-method';
 import { PaymentModel } from './payments.entity';
 
 export function modelToDomain(payment: PaymentModel): PaymentMethod {
-	const { type } = payment;
+	const { type = Payment.Type.CASH } = payment;
 
 	const type_based = {
 		[Payment.Type.CASH]: CashMethod,
@@ -12,4 +12,8 @@ export function modelToDomain(payment: PaymentModel): PaymentMethod {
 	};
 
 	return new type_based[type](payment);
+}
+
+export function arrayModelToDomain(payments: PaymentModel[]): PaymentMethod[] {
+	return payments.map(modelToDomain);
 }
