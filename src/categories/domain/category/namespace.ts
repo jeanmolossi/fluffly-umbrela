@@ -19,6 +19,10 @@ export namespace Categories {
 	}
 
 	export interface FindRepository {
-		run(filter: Partial<Model>): Promise<Category[]>;
+		run(
+			filter: Partial<Model>,
+			page?: number,
+			per_page?: number
+		): Promise<{ categories: Category[]; total: number }>;
 	}
 }

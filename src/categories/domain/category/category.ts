@@ -23,4 +23,12 @@ export class Category extends Entity {
 	get parent_id(): string {
 		return this._props.parent_id;
 	}
+
+	get created_at(): Date {
+		return this._props.created_at;
+	}
+
+	get updated_at(): Date {
+		return this._props.updated_at;
+	}
 }
