@@ -53,6 +53,14 @@ export abstract class PaymentMethod extends Entity {
 		return this._props.brand;
 	}
 
+	get created_at(): Date {
+		return this._props.created_at;
+	}
+
+	get updated_at(): Date {
+		return this._props.updated_at;
+	}
+
 	/**
 	 * factory is the abstract method who will return the payment instance
 	 * @param {Payment.Model} _props is the model to instantiate a new payment method
