@@ -1,5 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Exclude, Expose } from 'class-transformer';
+import { Exclude, Expose, Transform } from 'class-transformer';
+import constants from '@/shared/shared.constants';
+
+const self_example = (id: string) => `${constants.BASE_HOST}/categories/${id}`;
 
 @Exclude()
 export class CategoryDTO {
@@ -21,9 +24,16 @@ export class CategoryDTO {
 
 	@Expose()
 	@ApiProperty({ example: new Date(2022, 1, 1) })
-	created_at?: Date;
+	created_at: Date;
 
 	@Expose()
 	@ApiProperty({ example: new Date(2022, 1, 1) })
-	updated_at?: Date;
+	updated_at: Date;
+
+	@Expose()
+	@Transform(({ obj }) => self_example(obj.id))
+	@ApiProperty({
+		example: self_example('10f843c1-a49a-48d5-b50a-dd94e65a1e2a')
+	})
+	_self: string;
 }
