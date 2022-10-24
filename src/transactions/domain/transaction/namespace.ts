@@ -12,6 +12,7 @@ export namespace Transactions {
 		category_id: string;
 		user_id: string;
 		reference: string;
+		value: number;
 		type?: Type;
 		created_at?: Date;
 		updated_at?: Date;

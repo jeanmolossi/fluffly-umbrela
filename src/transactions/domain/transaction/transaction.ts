@@ -31,6 +31,14 @@ export class Transaction extends Entity {
 		if (!this._props.wallet_id) {
 			throw new Error('You should provide a wallet from transaction');
 		}
+
+		if (!this._props.value || Number.isNaN(this._props.value)) {
+			throw new Error('Value from transaction should be valid value');
+		}
+
+		if (!Number.isSafeInteger(this._props.value)) {
+			throw new Error('Value should be a safe integer');
+		}
 	}
 
 	get reference(): string {
@@ -51,5 +59,21 @@ export class Transaction extends Entity {
 
 	get type(): Transactions.Type {
 		return this._props.type;
+	}
+
+	get value(): number {
+		return this._props.value;
+	}
+
+	get value_fmt(): string {
+		if (!this._props.value || Number.isNaN(this._props.value)) {
+			return 'R$ 0,00';
+		}
+
+		const to_brl = this._props.value / 100;
+		return new Intl.NumberFormat('pt-BR', {
+			style: 'currency',
+			currency: 'BRL'
+		}).format(to_brl);
 	}
 }
