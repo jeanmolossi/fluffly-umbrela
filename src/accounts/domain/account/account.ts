@@ -1,21 +1,9 @@
 import { randomUUID } from 'crypto';
 import { Entity } from '@/shared/domain/entity';
-
-export namespace Account {
-	export interface Model {
-		id?: string;
-		name: string;
-		initial_amount?: number;
-		current_amount?: number;
-		bank_id?: number;
-		bank_name?: string;
-		created_at?: Date;
-		updated_at?: Date;
-	}
-}
+import { Accounts } from './namespace';
 
 export class Account extends Entity {
-	constructor(private readonly _props: Account.Model) {
+	constructor(private readonly _props: Accounts.Model) {
 		_props.id = _props.id ?? randomUUID();
 		super(_props.id);
 
@@ -26,6 +14,10 @@ export class Account extends Entity {
 		_props.bank_name = _props.bank_name ?? 'Carteira';
 		_props.created_at = _props.created_at ?? new Date();
 		_props.updated_at = _props.updated_at ?? new Date();
+	}
+
+	get user_id(): string {
+		return this._props.user_id;
 	}
 
 	get name(): string {

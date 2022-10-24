@@ -1,4 +1,25 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AccountsController } from './accounts.controller';
+import { AccountModel } from './infra/repositories/account.entity';
+import { CreateAccountRepository } from './infra/repositories/create.repository';
+import { FindOneAccountRepository } from './infra/repositories/find-one.repository';
+import { FindAccountRepository } from './infra/repositories/find.repository';
+import { AddAccountService } from './infra/services/add-account.service';
+import { GetMyAccountsService } from './infra/services/my-accounts.service';
 
-@Module({})
+@Module({
+	imports: [TypeOrmModule.forFeature([AccountModel])],
+	controllers: [AccountsController],
+	providers: [
+		// Repositories
+		CreateAccountRepository,
+		FindOneAccountRepository,
+		FindAccountRepository,
+		// Services
+		AddAccountService,
+		GetMyAccountsService
+	],
+	exports: [TypeOrmModule]
+})
 export class AccountsModule {}
