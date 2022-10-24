@@ -16,7 +16,7 @@ export class AccountModel {
 	@Column({ type: 'uuid' })
 	user_id: string;
 
-	@ManyToOne(() => UserModel, u => u.id)
+	@ManyToOne(() => UserModel, u => u.accounts)
 	user: UserModel;
 
 	@Column()

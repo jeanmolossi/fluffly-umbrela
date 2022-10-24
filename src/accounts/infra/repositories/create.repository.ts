@@ -12,9 +12,7 @@ export class CreateAccountRepository implements Accounts.CreateRepository {
 		private readonly accountsRepository: Repository<AccountModel>
 	) {}
 
-	async run(add_account: Accounts.Model): Promise<Account> {
-		const account = new Account(add_account);
-
+	async run(account: Account): Promise<Account> {
 		const orm_account = this.accountsRepository.create(account);
 		const saved_account = await this.accountsRepository.save(orm_account);
 

@@ -14,7 +14,7 @@ export namespace Accounts {
 	}
 
 	export interface CreateRepository {
-		run(add_account: Model): Promise<Account>;
+		run(account: Account): Promise<Account>;
 	}
 
 	export interface FindOneRepository {

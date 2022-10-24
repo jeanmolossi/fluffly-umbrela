@@ -7,6 +7,7 @@ import {
 	PrimaryGeneratedColumn,
 	UpdateDateColumn
 } from 'typeorm';
+import { AccountModel } from '@/accounts/infra/repositories/account.entity';
 import { CategoryModel } from '@/categories/infra/repositories/category.entity';
 import { TransactionModel } from '@/transactions/infra/repositories/transactions.entity';
 
@@ -32,6 +33,9 @@ export class UserModel {
 
 	@ManyToOne(() => TransactionModel, t => t.user)
 	transactions?: TransactionModel[];
+
+	@ManyToOne(() => AccountModel, a => a.user)
+	accounts?: AccountModel;
 
 	@CreateDateColumn()
 	created_at?: Date;

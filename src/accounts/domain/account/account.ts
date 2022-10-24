@@ -7,6 +7,8 @@ export class Account extends Entity {
 		_props.id = _props.id ?? randomUUID();
 		super(_props.id);
 
+		if (!_props.user_id) throw new Error('Account should have a user');
+
 		// Initialize all optional props
 		_props.initial_amount = _props.initial_amount ?? 0;
 		_props.current_amount = _props.current_amount ?? 0;
@@ -38,6 +40,14 @@ export class Account extends Entity {
 
 	get bank_name(): string {
 		return this._props.bank_name;
+	}
+
+	get created_at(): Date {
+		return this._props.created_at;
+	}
+
+	get updated_at(): Date {
+		return this._props.updated_at;
 	}
 
 	public updateInitialAmount(newAmount: number) {

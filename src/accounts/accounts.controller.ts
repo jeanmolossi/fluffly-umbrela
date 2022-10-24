@@ -27,9 +27,14 @@ export class AccountsController {
 	@Post()
 	@ApiBody({ type: AddAccount })
 	@ApiCreatedResponse({ type: AccountDTO })
-	async addAccount(@AuthUser() user: User, @Body() add_account: AddAccount) {}
+	async addAccount(@AuthUser() user: User, @Body() add_account: AddAccount) {
+		add_account.user_id = user.id;
+		return await this.addAccountService.run(add_account);
+	}
 
 	@Get()
 	@ApiOkResponse({ type: AccountListDTO })
-	async myAccounts(@AuthUser() user: User, @Query() pagination: Pagination) {}
+	async myAccounts(@AuthUser() user: User, @Query() pagination: Pagination) {
+		return await this.getMyAccountsService.run(user, pagination);
+	}
 }
