@@ -7,6 +7,7 @@ import { FindOneTransactionRepository } from './infra/repositories/find-one.repo
 import { FindTransactionRepository } from './infra/repositories/find.repository';
 import { TransactionModel } from './infra/repositories/transactions.entity';
 import { AddTransactionService } from './infra/services/add-transaction.service';
+import { GetMyTransactionsService } from './infra/services/get-my-transactions.service';
 import { TransactionsController } from './transactions.controller';
 
 @Module({
@@ -21,7 +22,8 @@ import { TransactionsController } from './transactions.controller';
 		FindOneTransactionRepository,
 		FindTransactionRepository,
 		// Services
-		AddTransactionService
+		AddTransactionService,
+		GetMyTransactionsService
 	],
 	exports: [TypeOrmModule],
 	controllers: [TransactionsController]

@@ -31,6 +31,6 @@ export namespace Transactions {
 			filter: Partial<Model>,
 			page?: number,
 			per_page?: number
-		): Promise<Transaction[]>;
+		): Promise<{ transactions: Transaction[]; total: number }>;
 	}
 }

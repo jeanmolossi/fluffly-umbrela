@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Transaction } from '@/transactions/domain';
 import { Transactions } from '@/transactions/domain/transaction/namespace';
 import { TransactionModel } from './transactions.entity';
+import { arrayModelToDomain } from './transactions.mapper';
 
 @Injectable()
 export class FindTransactionRepository implements Transactions.FindRepository {
@@ -16,7 +17,21 @@ export class FindTransactionRepository implements Transactions.FindRepository {
 		filter: Partial<Transactions.Model>,
 		page?: number,
 		per_page?: number
-	): Promise<Transaction[]> {
-		throw new Error('Method not implemented.');
+	): Promise<{ transactions: Transaction[]; total: number }> {
+		const [transactions, total] =
+			await this.transactionsRepository.findAndCount({
+				where: filter,
+				take: per_page,
+				skip: this.offset(page, per_page)
+			});
+
+		return {
+			transactions: arrayModelToDomain(transactions || []),
+			total
+		};
+	}
+
+	private offset(page: number = 1, per_page: number = 15): number {
+		return (page - 1) * per_page;
 	}
 }
