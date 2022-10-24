@@ -26,6 +26,6 @@ export namespace Accounts {
 			filter: Partial<Model>,
 			page?: number,
 			per_page?: number
-		): Promise<Account[]>;
+		): Promise<{ accounts: Account[]; total: number }>;
 	}
 }

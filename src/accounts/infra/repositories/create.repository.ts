@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Account, Accounts } from '@/accounts/domain';
 import { AccountModel } from './account.entity';
+import { modelToDomain } from './account.mapper';
 
 @Injectable()
 export class CreateAccountRepository implements Accounts.CreateRepository {
@@ -12,6 +13,11 @@ export class CreateAccountRepository implements Accounts.CreateRepository {
 	) {}
 
 	async run(add_account: Accounts.Model): Promise<Account> {
-		throw new Error('Method not implemented.');
+		const account = new Account(add_account);
+
+		const orm_account = this.accountsRepository.create(account);
+		const saved_account = await this.accountsRepository.save(orm_account);
+
+		return modelToDomain(saved_account);
 	}
 }
