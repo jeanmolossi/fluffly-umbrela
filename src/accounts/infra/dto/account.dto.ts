@@ -1,11 +1,13 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Exclude, Expose } from 'class-transformer';
-import { randomUUID } from 'crypto';
+import { Exclude, Expose, Transform } from 'class-transformer';
+import constants from '@/shared/shared.constants';
+
+const self_example = (id: string) => `${constants.BASE_HOST}/accounts/${id}`;
 
 @Exclude()
 export class AccountDTO {
 	@Expose()
-	@ApiProperty({ example: randomUUID() })
+	@ApiProperty({ example: '491d348e-8635-4462-b718-378a5786a40c' })
 	id: string;
 
 	@Expose()
@@ -39,4 +41,11 @@ export class AccountDTO {
 	@Expose()
 	@ApiProperty({ example: new Date(2022, 1, 1) })
 	updated_at: Date;
+
+	@Expose()
+	@Transform(({ obj }) => self_example(obj.id))
+	@ApiProperty({
+		example: self_example('491d348e-8635-4462-b718-378a5786a40c')
+	})
+	_self: string;
 }
