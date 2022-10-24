@@ -1,22 +1,6 @@
 import { randomUUID } from 'crypto';
 import { Entity } from '@/shared/domain/entity';
-
-export namespace Transactions {
-	export enum Type {
-		'EXPENSE' = 'EXPENSE',
-		'INCOME' = 'INCOME'
-	}
-
-	export interface Model {
-		id?: string;
-		wallet_id: string;
-		category_id: string;
-		reference: string;
-		type?: Type;
-		created_at?: Date;
-		updated_at?: Date;
-	}
-}
+import { Transactions } from './namespace';
 
 export class Transaction extends Entity {
 	constructor(private readonly _props: Transactions.Model) {
@@ -32,6 +16,10 @@ export class Transaction extends Entity {
 	}
 
 	private validate() {
+		if (!this._props.user_id) {
+			throw new Error('A transaction should have a user');
+		}
+
 		if (!this._props.reference) {
 			throw new Error('All transactions should have a reference');
 		}
@@ -55,6 +43,10 @@ export class Transaction extends Entity {
 
 	get category_id(): string {
 		return this._props.category_id;
+	}
+
+	get user_id(): string {
+		return this._props.user_id;
 	}
 
 	get type(): Transactions.Type {
