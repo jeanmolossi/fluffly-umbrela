@@ -9,8 +9,8 @@ describe('Domain > Account', function () {
 		expect(account.id).not.toBeUndefined();
 		expect(account.name).toBe('Dinheiro');
 		expect(account.initial_amount).toBe(0);
-		expect(account.bankId).toBe(1);
-		expect(account.bankName).toBe('Carteira');
+		expect(account.bank_id).toBe(1);
+		expect(account.bank_name).toBe('Carteira');
 	});
 
 	test('should update initial amount', function () {
