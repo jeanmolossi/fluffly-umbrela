@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { plainToClass } from 'class-transformer';
 import { Categories } from '@/categories/domain';
 import { FindOneCategoryRepository } from '@/categories/infra/repositories/find-one.repository';
@@ -8,6 +9,7 @@ import { BadRequestErr, ConflictErr } from '@/shared/domain/http-errors';
 import { Transactions } from '@/transactions/domain/transaction/namespace';
 import { AddTransaction } from '../adapters/add-transaction';
 import { TransactionDTO } from '../dto/transaction.dto';
+import { TransactionAddedEvent } from '../events/transaction-added.event';
 import { CreateTransactionRepository } from '../repositories/create.repository';
 import { FindOneTransactionRepository } from '../repositories/find-one.repository';
 
@@ -23,7 +25,9 @@ export class AddTransactionService {
 		private readonly findWallet: Payment.FindOneRepository,
 		// Categories - Helpers
 		@Inject(FindOneCategoryRepository)
-		private readonly findCategory: Categories.FindOneRepository
+		private readonly findCategory: Categories.FindOneRepository,
+		// Event emitter
+		private readonly emitter: EventEmitter2
 	) {}
 
 	async run(add_transaction: AddTransaction): Promise<TransactionDTO> {
@@ -49,6 +53,11 @@ export class AddTransactionService {
 		if (transaction_already_exists) {
 			throw new ConflictErr('Transaction already exists');
 		}
+
+		const transaction_added_event = new TransactionAddedEvent();
+		transaction_added_event.value = add_transaction.value;
+
+		this.emitter.emit('transaction.added', transaction_added_event);
 
 		return plainToClass(
 			TransactionDTO,
