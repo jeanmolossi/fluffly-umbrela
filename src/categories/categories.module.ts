@@ -19,6 +19,7 @@ import { FindMyCategoriesService } from './infra/services/find.service';
 		// services
 		CreateCategoryService,
 		FindMyCategoriesService
-	]
+	],
+	exports: [FindOneCategoryRepository]
 })
 export class CategoriesModule {}

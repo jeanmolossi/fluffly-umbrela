@@ -7,6 +7,7 @@ import {
 	UpdateDateColumn
 } from 'typeorm';
 import { Payment } from '@/payments/domain';
+import { TransactionModel } from '@/transactions/infra/repositories/transactions.entity';
 import { UserModel } from '@/users/infra/repository/user.entity';
 
 @Entity({ name: 'payments' })
@@ -19,6 +20,9 @@ export class PaymentModel {
 
 	@ManyToOne(() => UserModel)
 	user: UserModel;
+
+	@ManyToOne(() => TransactionModel, t => t.wallet)
+	transactions: TransactionModel[];
 
 	@Column()
 	name: string;

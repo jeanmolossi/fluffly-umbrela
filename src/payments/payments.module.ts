@@ -20,6 +20,6 @@ import { PaymentsController } from './payments.controller';
 		CreateWalletService,
 		FindMyWalletsService
 	],
-	exports: [TypeOrmModule]
+	exports: [TypeOrmModule, FindOneWalletRepository]
 })
 export class PaymentsModule {}

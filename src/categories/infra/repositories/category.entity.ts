@@ -7,6 +7,7 @@ import {
 	CreateDateColumn,
 	UpdateDateColumn
 } from 'typeorm';
+import { TransactionModel } from '@/transactions/infra/repositories/transactions.entity';
 import { UserModel } from '@/users/infra/repository/user.entity';
 
 @Entity({ name: 'categories' })
@@ -31,6 +32,9 @@ export class CategoryModel {
 
 	@OneToMany(() => UserModel, u => u.categories)
 	user: UserModel;
+
+	@ManyToOne(() => TransactionModel, t => t.category)
+	transactions: TransactionModel[];
 
 	@CreateDateColumn()
 	created_at: Date;
