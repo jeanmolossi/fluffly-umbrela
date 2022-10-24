@@ -16,19 +16,19 @@ export class TransactionModel {
 	@PrimaryGeneratedColumn('uuid')
 	id: string;
 
-	@Column()
+	@Column({ type: 'uuid' })
 	wallet_id: string;
 
 	@OneToMany(() => PaymentModel, p => p.transactions)
 	wallet?: PaymentModel;
 
-	@Column()
+	@Column({ type: 'uuid' })
 	category_id: string;
 
 	@OneToMany(() => CategoryModel, c => c.id)
 	category?: CategoryModel;
 
-	@Column()
+	@Column({ type: 'uuid' })
 	user_id: string;
 
 	@OneToMany(() => UserModel, u => u.id)
