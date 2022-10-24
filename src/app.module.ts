@@ -1,4 +1,5 @@
 import { Logger, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { AccountsModule } from './accounts/accounts.module';
 import { AppController } from './app.controller';
 import { ConfigModuleFactory, TypeOrmModuleFactory } from './app.modules';
@@ -15,6 +16,7 @@ import { UsersModule } from './users/users.module';
 	imports: [
 		ConfigModuleFactory(),
 		TypeOrmModuleFactory(),
+		EventEmitterModule.forRoot(),
 		UsersModule,
 		SharedModule,
 		AccountsModule,
