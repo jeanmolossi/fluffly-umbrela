@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { NotFoundErr } from '@/shared/domain/http-errors';
 import { User, Users } from '@/users/domain';
 import { UserModel } from './user.entity';
+import { modelToDomain } from './user.mapper';
 
 @Injectable()
 export class FindOneRepository implements Users.FindOneRepository {
@@ -21,6 +22,6 @@ export class FindOneRepository implements Users.FindOneRepository {
 			throw new NotFoundErr('User not found');
 		}
 
-		return new User(user);
+		return modelToDomain(user);
 	}
 }

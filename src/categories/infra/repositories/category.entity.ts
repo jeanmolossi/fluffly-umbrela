@@ -33,7 +33,7 @@ export class CategoryModel {
 	@OneToMany(() => UserModel, u => u.categories)
 	user: UserModel;
 
-	@ManyToOne(() => TransactionModel, t => t.category)
+	@OneToMany(() => TransactionModel, t => t.category)
 	transactions: TransactionModel[];
 
 	@CreateDateColumn()

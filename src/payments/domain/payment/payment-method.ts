@@ -26,6 +26,10 @@ export abstract class PaymentMethod extends Entity {
 		return this._props.user_id;
 	}
 
+	get account_id(): string {
+		return this._props.account_id;
+	}
+
 	get name(): string {
 		return this._props.name;
 	}
@@ -75,7 +79,7 @@ export class CashMethod extends PaymentMethod {
 	 * Use that class to create a new payment method
 	 * @param {Payment.Model} _props the options to create a payment method
 	 */
-	constructor(_props: Payment.Model) {
+	constructor(_props: Payment.Model = {} as Payment.Model) {
 		_props.type = _props.type ?? Payment.Type.CASH;
 		_props.limit = null;
 		_props.brand = null;
@@ -95,7 +99,7 @@ export class CreditCard extends PaymentMethod {
 	 * Use that class to create a new payment method
 	 * @param {Payment.Model} _props the options to create a payment method
 	 */
-	constructor(_props: Payment.Model) {
+	constructor(_props: Payment.Model = {} as Payment.Model) {
 		// Credit card ever will have CREDIT type
 		_props.type = Payment.Type.CREDIT;
 
@@ -125,7 +129,7 @@ export class DebitCard extends PaymentMethod {
 	 * Use that class to create a new payment method
 	 * @param {Payment.Model} _props the options to create a payment method
 	 */
-	constructor(_props: Payment.Model) {
+	constructor(_props: Payment.Model = {} as Payment.Model) {
 		// Debit card ever will has type DEBIT and no limit
 		_props.type = Payment.Type.DEBIT;
 		_props.limit = null;

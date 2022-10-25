@@ -3,7 +3,9 @@ import { Entity } from '@/shared/domain/entity';
 import { Categories } from './namespace';
 
 export class Category extends Entity {
-	constructor(private readonly _props: Categories.Model) {
+	constructor(
+		private readonly _props: Categories.Model = {} as Categories.Model
+	) {
 		_props.id = _props.id ?? randomUUID();
 
 		super(_props.id);

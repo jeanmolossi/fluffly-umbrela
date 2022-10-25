@@ -2,7 +2,6 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
-	ManyToOne,
 	OneToMany,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn
@@ -29,13 +28,13 @@ export class UserModel {
 	avatar?: string;
 
 	@OneToMany(() => CategoryModel, c => c.user)
-	categories?: CategoryModel;
+	categories?: CategoryModel[];
 
-	@ManyToOne(() => TransactionModel, t => t.user)
+	@OneToMany(() => TransactionModel, t => t.user)
 	transactions?: TransactionModel[];
 
-	@ManyToOne(() => AccountModel, a => a.user)
-	accounts?: AccountModel;
+	@OneToMany(() => AccountModel, a => a.user)
+	accounts?: AccountModel[];
 
 	@CreateDateColumn()
 	created_at?: Date;

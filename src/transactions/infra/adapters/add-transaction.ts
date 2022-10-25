@@ -10,7 +10,7 @@ import {
 import { randomUUID } from 'crypto';
 import { Transactions } from '@/transactions/domain/transaction/namespace';
 
-export class AddTransaction implements Transactions.Model {
+export class AddTransaction {
 	@ApiProperty({ example: 'Capitão do Hamburguer' })
 	@IsNotEmpty({ message: 'Reference should be provided' })
 	reference: string;

@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { ConflictErr } from '@/shared/domain/http-errors';
 import { User, Users } from '@/users/domain';
 import { UserModel } from './user.entity';
+import { modelToDomain } from './user.mapper';
 
 @Injectable()
 export class CreateRepository implements Users.CreateRepository {
@@ -21,10 +22,9 @@ export class CreateRepository implements Users.CreateRepository {
 
 		new_user.encrypyPassword();
 		const created_user = this.usersRepository.create(new_user);
-		const { id, name, email, password, created_at, updated_at } =
-			await this.usersRepository.save(created_user);
+		const saved_user = await this.usersRepository.save(created_user);
 
-		return new User({ id, name, email, password, created_at, updated_at });
+		return modelToDomain(saved_user);
 	}
 
 	private async userAlreadyExists(email: string) {

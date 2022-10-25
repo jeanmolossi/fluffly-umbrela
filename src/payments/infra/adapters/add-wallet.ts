@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
-import { IsEnum, IsNotEmpty, IsNumber } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumber, IsUUID } from 'class-validator';
 import { Payment } from '@/payments/domain';
 
 export class AddWallet {
@@ -9,7 +9,11 @@ export class AddWallet {
 	name: string;
 
 	@Exclude()
-	user_id?: string;
+	user_id: string;
+
+	@ApiProperty({ example: '85477275-4cf8-4ba4-ae39-9fb864b73914' })
+	@IsUUID('4')
+	account_id: string;
 
 	@ApiProperty({
 		example: Payment.Type.CASH,

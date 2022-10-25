@@ -1,5 +1,8 @@
 import { randomUUID } from 'crypto';
+import { Category } from '@/categories/domain';
+import { PaymentMethod } from '@/payments/domain';
 import { Entity } from '@/shared/domain/entity';
+import { User } from '@/users/domain';
 import { Transactions } from './namespace';
 
 export class Transaction extends Entity {
@@ -16,7 +19,7 @@ export class Transaction extends Entity {
 	}
 
 	private validate() {
-		if (!this._props.user_id) {
+		if (this._props.user && !this._props.user.id) {
 			throw new Error('A transaction should have a user');
 		}
 
@@ -24,11 +27,11 @@ export class Transaction extends Entity {
 			throw new Error('All transactions should have a reference');
 		}
 
-		if (!this._props.category_id) {
+		if (this._props.category && !this._props.category.id) {
 			throw new Error('You should provide a transaction category');
 		}
 
-		if (!this._props.wallet_id) {
+		if (this._props.wallet && !this._props.wallet.id) {
 			throw new Error('You should provide a wallet from transaction');
 		}
 
@@ -46,19 +49,33 @@ export class Transaction extends Entity {
 	}
 
 	get wallet_id(): string {
-		return this._props.wallet_id;
+		return this._props.wallet?.id;
+	}
+
+	get wallet(): PaymentMethod {
+		if (!this._props.wallet) return undefined;
+
+		return this._props.wallet as PaymentMethod;
 	}
 
 	get category_id(): string {
-		return this._props.category_id;
+		return this._props.category?.id;
+	}
+
+	get category(): Category {
+		return (this._props.category as Category) || undefined;
 	}
 
 	get user_id(): string {
-		return this._props.user_id;
+		return this._props.user?.id;
+	}
+
+	get user(): User {
+		return (this._props.user as User) || undefined;
 	}
 
 	get type(): Transactions.Type {
-		return this._props.type;
+		return this._props.type || Transactions.Type.EXPENSE;
 	}
 
 	get value(): number {

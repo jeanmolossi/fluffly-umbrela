@@ -17,6 +17,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
 		const message = exception.message || 'Internal Server Error';
 
+		if (process.env.NODE_ENV === 'development') {
+			console.log(exception.stack);
+		}
+
 		return response.status(status).json({
 			statusCode: status,
 			message

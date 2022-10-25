@@ -19,6 +19,10 @@ export class FindAccountRepository implements Accounts.FindRepository {
 	): Promise<{ accounts: Account[]; total: number }> {
 		const [accounts, total] = await this.accountsRepository.findAndCount({
 			where: filter,
+			cache: {
+				id: 'accounts',
+				milliseconds: 1000 * 60 // 1 minute
+			},
 			take: per_page,
 			skip: this.offset(page, per_page)
 		});

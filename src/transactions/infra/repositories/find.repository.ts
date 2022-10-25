@@ -15,14 +15,16 @@ export class FindTransactionRepository implements Transactions.FindRepository {
 
 	async run(
 		filter: Partial<Transactions.Model>,
-		page?: number,
-		per_page?: number
+		filters: Transactions.Filters
 	): Promise<{ transactions: Transaction[]; total: number }> {
+		const { page, per_page, relations } = filters;
+
 		const [transactions, total] =
 			await this.transactionsRepository.findAndCount({
 				where: filter,
 				take: per_page,
-				skip: this.offset(page, per_page)
+				skip: this.offset(page, per_page),
+				relations
 			});
 
 		return {

@@ -8,7 +8,7 @@ import {
 import { Users } from './namespace';
 
 export class User extends Entity {
-	constructor(private readonly _props: Users.Model) {
+	constructor(private readonly _props: Users.Model = {} as Users.Model) {
 		// _props.id should be a new randomUUID if incoming
 		// id is not defined
 		_props.id = _props.id ?? randomUUID();

@@ -2,7 +2,7 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
-	OneToMany,
+	ManyToOne,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn
 } from 'typeorm';
@@ -16,22 +16,13 @@ export class TransactionModel {
 	@PrimaryGeneratedColumn('uuid')
 	id: string;
 
-	@Column({ type: 'uuid' })
-	wallet_id: string;
-
-	@OneToMany(() => PaymentModel, p => p.transactions)
+	@ManyToOne(() => PaymentModel, p => p.transactions)
 	wallet?: PaymentModel;
 
-	@Column({ type: 'uuid' })
-	category_id: string;
-
-	@OneToMany(() => CategoryModel, c => c.id)
+	@ManyToOne(() => CategoryModel, c => c.transactions)
 	category?: CategoryModel;
 
-	@Column({ type: 'uuid' })
-	user_id: string;
-
-	@OneToMany(() => UserModel, u => u.id)
+	@ManyToOne(() => UserModel, u => u.transactions)
 	user?: UserModel;
 
 	@Column()

@@ -3,9 +3,11 @@ import {
 	CreateDateColumn,
 	Entity,
 	ManyToOne,
+	OneToMany,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn
 } from 'typeorm';
+import { AccountModel } from '@/accounts/infra/repositories/account.entity';
 import { Payment } from '@/payments/domain';
 import { TransactionModel } from '@/transactions/infra/repositories/transactions.entity';
 import { UserModel } from '@/users/infra/repository/user.entity';
@@ -21,8 +23,14 @@ export class PaymentModel {
 	@ManyToOne(() => UserModel)
 	user: UserModel;
 
-	@ManyToOne(() => TransactionModel, t => t.wallet)
+	@OneToMany(() => TransactionModel, t => t.wallet)
 	transactions: TransactionModel[];
+
+	@Column({ name: 'account_id' })
+	account_id: string;
+
+	@ManyToOne(() => AccountModel, a => a.wallets)
+	account: AccountModel;
 
 	@Column()
 	name: string;

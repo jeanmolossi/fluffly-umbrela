@@ -6,10 +6,10 @@ import {
 	ApiTags
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@/auth/infra/guards/jwt-auth.guard';
-import { Pagination } from '@/shared/infra/adapters/pagination';
 import { AuthUser } from '@/shared/infra/decorators/user.decorator';
 import { User } from '@/users/domain';
 import { AddTransaction } from './infra/adapters/add-transaction';
+import { TransactionFilters } from './infra/adapters/transaction-filters';
 import { TransactionListDTO } from './infra/dto/transaction-list.dto';
 import { TransactionDTO } from './infra/dto/transaction.dto';
 import { AddTransactionService } from './infra/services/add-transaction.service';
@@ -40,8 +40,8 @@ export class TransactionsController {
 	@ApiOkResponse({ type: TransactionListDTO })
 	async getMyTransactions(
 		@AuthUser() user: User,
-		@Query() pagination: Pagination
+		@Query() filters: TransactionFilters
 	) {
-		return this.getMyTransactionsService.run(user, pagination);
+		return this.getMyTransactionsService.run(user, filters);
 	}
 }

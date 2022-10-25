@@ -1,7 +1,10 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Exclude, Expose, Transform } from 'class-transformer';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Exclude, Expose, plainToClass, Transform } from 'class-transformer';
+import { CategoryDTO } from '@/categories/infra/dto/category.dto';
+import { PaymentDTO } from '@/payments/infra/dto/payment.dto';
 import constants from '@/shared/shared.constants';
 import { Transactions } from '@/transactions/domain';
+import { UserDTO } from '@/users/infra/dto/user.dto';
 
 const self_example = (id: string) =>
 	`${constants.BASE_HOST}/transactions/${id}`;
@@ -13,16 +16,23 @@ export class TransactionDTO {
 	id: string;
 
 	@Expose()
-	@ApiProperty({ example: '973ab597-04a2-4484-91af-baf57dcaf737' })
-	wallet_id: string;
+	@ApiPropertyOptional({ type: PaymentDTO })
+	@Transform(({ obj }) => plainToClass(PaymentDTO, obj.wallet))
+	wallet?: PaymentDTO;
 
 	@Expose()
-	@ApiProperty({ example: '973ab597-04a2-4484-91af-baf57dcaf737' })
-	category_id: string;
+	@ApiPropertyOptional({ type: CategoryDTO })
+	@Transform(({ obj }) => plainToClass(CategoryDTO, obj.category))
+	category?: CategoryDTO;
 
 	@Expose()
-	@ApiProperty({ example: 'cd9746b9-9b99-4b91-a0ea-1c75f15a76be' })
-	user_id: string;
+	@ApiPropertyOptional({ type: UserDTO })
+	@Transform(({ obj }) => plainToClass(UserDTO, obj.user))
+	user?: UserDTO;
+
+	@Expose()
+	@ApiProperty({ example: '85477275-4cf8-4ba4-ae39-9fb864b73914' })
+	account_id: string;
 
 	@Expose()
 	@ApiProperty({ example: 'Capitão do Hamburguer' })

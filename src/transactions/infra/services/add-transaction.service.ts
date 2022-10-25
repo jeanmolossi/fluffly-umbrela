@@ -31,7 +31,14 @@ export class AddTransactionService {
 	) {}
 
 	async run(add_transaction: AddTransaction): Promise<TransactionDTO> {
-		const { user_id, reference, value } = add_transaction;
+		const {
+			user_id,
+			reference,
+			value,
+			category_id,
+			wallet_id,
+			type = Transactions.Type.EXPENSE
+		} = add_transaction;
 
 		const aggregations_exists = await this.aggregations_exists(
 			add_transaction
@@ -44,7 +51,7 @@ export class AddTransactionService {
 		}
 
 		const transaction_already_exists = await this.findOne.run({
-			user_id,
+			user: { id: user_id },
 			reference,
 			value,
 			created_at: new Date()
@@ -61,7 +68,14 @@ export class AddTransactionService {
 
 		return plainToClass(
 			TransactionDTO,
-			await this.create.run(add_transaction)
+			await this.create.run({
+				reference,
+				value,
+				type,
+				user: { id: user_id },
+				category: { id: category_id },
+				wallet: { id: wallet_id }
+			})
 		);
 	}
 

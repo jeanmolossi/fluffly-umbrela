@@ -1,3 +1,6 @@
+import { Account } from '@/accounts/domain';
+import { Category } from '@/categories/domain';
+import { Transaction } from '@/transactions/domain';
 import { User } from './user';
 
 export namespace Users {
@@ -7,6 +10,9 @@ export namespace Users {
 		email: string;
 		password: string;
 		avatar?: string;
+		categories?: Category[];
+		accounts?: Account[];
+		transactions?: Transaction[];
 		created_at?: Date;
 		updated_at?: Date;
 	}

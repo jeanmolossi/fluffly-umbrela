@@ -1,7 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Exclude, Expose, plainToClass } from 'class-transformer';
+import { plainToClass } from 'class-transformer';
 import { Users } from '@/users/domain';
 import { RegisterUser } from '../adapters/register-user';
+import { UserDTO } from '../dto/user.dto';
 import { CreateRepository } from '../repository/create.repository';
 
 @Injectable()
@@ -15,11 +16,4 @@ export class CreateService {
 		const user = await this.createRepository.run(register);
 		return plainToClass(UserDTO, user);
 	}
-}
-
-@Exclude()
-export class UserDTO {
-	@Expose() id: string;
-	@Expose() name: string;
-	@Expose() email: string;
 }

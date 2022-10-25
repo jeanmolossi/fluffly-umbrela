@@ -11,9 +11,9 @@ describe('Domain > Transaction', function () {
 
 		const transaction = new Transaction({
 			reference: 'Uber',
-			category_id: category_id_mock,
-			wallet_id: wallet_id_mock,
-			user_id: user_id_mock,
+			category: { id: category_id_mock },
+			wallet: { id: wallet_id_mock },
+			user: { id: user_id_mock },
 			value: value_mock
 		});
 
@@ -31,37 +31,37 @@ describe('Domain > Transaction', function () {
 		const test_case: { [k: string]: Transactions.Model } = {
 			should_have_reference: {
 				reference: null,
-				category_id: randomUUID(),
-				wallet_id: randomUUID(),
-				user_id: randomUUID(),
+				category: { id: randomUUID() },
+				wallet: { id: randomUUID() },
+				user: { id: randomUUID() },
 				value: 1990
 			},
 			should_have_category: {
 				reference: 'ref',
-				category_id: null,
-				wallet_id: randomUUID(),
-				user_id: randomUUID(),
+				category: null,
+				wallet: { id: randomUUID() },
+				user: { id: randomUUID() },
 				value: 1990
 			},
 			should_have_wallet: {
 				reference: 'ref',
-				category_id: randomUUID(),
-				wallet_id: null,
-				user_id: randomUUID(),
+				category: { id: randomUUID() },
+				wallet: null,
+				user: { id: randomUUID() },
 				value: 1990
 			},
 			should_have_value: {
 				reference: 'ref',
-				category_id: randomUUID(),
-				wallet_id: randomUUID(),
-				user_id: randomUUID(),
+				category: { id: randomUUID() },
+				wallet: { id: randomUUID() },
+				user: { id: randomUUID() },
 				value: 0
 			},
 			value_should_be_int: {
 				reference: 'ref',
-				category_id: randomUUID(),
-				wallet_id: randomUUID(),
-				user_id: randomUUID(),
+				category: { id: randomUUID() },
+				wallet: { id: randomUUID() },
+				user: { id: randomUUID() },
 				value: 0.1
 			}
 		};

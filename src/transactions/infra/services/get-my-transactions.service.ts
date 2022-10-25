@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
 import { get_pages } from '@/shared/helpers/get-pages';
-import { Pagination } from '@/shared/infra/adapters/pagination';
 import { Transaction } from '@/transactions/domain';
 import { Transactions } from '@/transactions/domain/transaction/namespace';
 import { User } from '@/users/domain';
+import { TransactionFilters } from '../adapters/transaction-filters';
 import { TransactionListDTO } from '../dto/transaction-list.dto';
 import { TransactionDTO } from '../dto/transaction.dto';
 import { FindTransactionRepository } from '../repositories/find.repository';
@@ -16,11 +16,11 @@ export class GetMyTransactionsService {
 		private readonly find: Transactions.FindRepository
 	) {}
 
-	async run(user: User, { page, per_page }: Pagination) {
+	async run(user: User, filters: TransactionFilters) {
+		const { page, per_page } = filters;
 		const { transactions, total } = await this.find.run(
-			{ user_id: user.id },
-			page,
-			per_page
+			{ user: { id: user.id } },
+			filters
 		);
 
 		return plainToClass(TransactionListDTO, {
