@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
 import { Account, Accounts } from '@/accounts/domain';
 import { ConflictErr } from '@/shared/domain/http-errors';
+import { User } from '@/users/domain';
 import { AddAccount } from '../adapters/add-account';
 import { AccountDTO } from '../dto/account.dto';
 import { CreateAccountRepository } from '../repositories/create.repository';
@@ -34,7 +35,10 @@ export class AddAccountService {
 		name,
 		user_id
 	}: AddAccount): Promise<boolean> {
-		const isset_account = await this.findOne.run({ name, user_id });
+		const isset_account = await this.findOne.run({
+			name,
+			user: { id: user_id } as User
+		});
 		return Boolean(isset_account?.id);
 	}
 }

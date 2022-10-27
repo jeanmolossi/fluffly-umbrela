@@ -1,13 +1,14 @@
 import { randomUUID } from 'crypto';
 import { Entity } from '@/shared/domain/entity';
+import { User } from '@/users/domain';
 import { Accounts } from './namespace';
 
 export class Account extends Entity {
-	constructor(private readonly _props: Accounts.Model) {
+	constructor(
+		private readonly _props: Accounts.Model = {} as Accounts.Model
+	) {
 		_props.id = _props.id ?? randomUUID();
 		super(_props.id);
-
-		if (!_props.user_id) throw new Error('Account should have a user');
 
 		// Initialize all optional props
 		_props.initial_amount = _props.initial_amount ?? 0;
@@ -19,7 +20,11 @@ export class Account extends Entity {
 	}
 
 	get user_id(): string {
-		return this._props.user_id;
+		return this._props.user?.id;
+	}
+
+	get user(): User {
+		return this._props.user;
 	}
 
 	get name(): string {

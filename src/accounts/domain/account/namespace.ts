@@ -1,9 +1,12 @@
+import { PaymentMethod } from '@/payments/domain';
+import { User } from '@/users/domain';
 import { Account } from './account';
 
 export namespace Accounts {
 	export interface Model {
 		id?: string;
-		user_id: string;
+		user?: User;
+		wallets?: PaymentMethod[];
 		name: string;
 		initial_amount?: number;
 		current_amount?: number;

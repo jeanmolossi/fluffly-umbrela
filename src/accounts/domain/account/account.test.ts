@@ -1,4 +1,5 @@
 import { randomUUID } from 'crypto';
+import { User } from '@/users/domain';
 import { Account } from './account';
 
 describe('Domain > Account', function () {
@@ -6,7 +7,7 @@ describe('Domain > Account', function () {
 		const user_id_mock = randomUUID();
 		const account = new Account({
 			name: 'Dinheiro',
-			user_id: user_id_mock
+			user: { id: user_id_mock } as User
 		});
 
 		expect(account.id).not.toBeUndefined();
@@ -21,7 +22,7 @@ describe('Domain > Account', function () {
 		const user_id_mock = randomUUID();
 		const account = new Account({
 			name: 'Dinheiro',
-			user_id: user_id_mock
+			user: { id: user_id_mock } as User
 		});
 
 		expect(account.initial_amount).toBe(0);
@@ -37,7 +38,7 @@ describe('Domain > Account', function () {
 		const user_id_mock = randomUUID();
 		const account = new Account({
 			name: 'Dinheiro',
-			user_id: user_id_mock
+			user: { id: user_id_mock } as User
 		});
 
 		expect(account.user_id).toBe(user_id_mock);

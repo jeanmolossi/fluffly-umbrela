@@ -20,7 +20,7 @@ export class GetMyAccountsService {
 		{ page, per_page }: Pagination
 	): Promise<AccountListDTO> {
 		const { accounts, total } = await this.find.run(
-			{ user_id: user.id },
+			{ user },
 			page,
 			per_page
 		);
