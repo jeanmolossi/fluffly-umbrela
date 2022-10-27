@@ -1,5 +1,6 @@
 import { Category } from '@/categories/domain';
 import { PaymentMethod } from '@/payments/domain';
+import { BaseFilters } from '@/shared/infra/repositories/base.filters';
 import { User } from '@/users/domain';
 import { Transaction } from './transaction';
 
@@ -23,15 +24,10 @@ export namespace Transactions {
 
 	export type Relations = 'user' | 'wallet' | 'category';
 
-	export interface Filters {
-		page?: number;
-		per_page?: number;
+	export interface Filters extends BaseFilters<Model, Relations> {
 		period?: number;
-		start_date?: Date;
-		end_date?: Date;
 		wallet?: string;
 		account?: string;
-		relations?: Relations[];
 	}
 
 	export interface CreateRepository {

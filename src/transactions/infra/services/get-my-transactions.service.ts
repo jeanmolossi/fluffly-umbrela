@@ -18,15 +18,46 @@ export class GetMyTransactionsService {
 
 	async run(user: User, filters: TransactionFilters) {
 		const { page, per_page } = filters;
-		const { transactions, total } = await this.find.run(
-			{ user: { id: user.id } },
-			filters
-		);
+
+		const where = this.parse_filters(user, filters);
+
+		const { transactions, total } = await this.find.run(where, filters);
 
 		return plainToClass(TransactionListDTO, {
 			transactions: this.get_transactions_dto(transactions),
 			meta: get_pages('transactions', total, page, per_page)
 		});
+	}
+
+	private parse_filters(
+		user: User,
+		filters: TransactionFilters
+	): Partial<Transactions.Model> {
+		const {
+			wallet: wallet_id,
+			account: account_id,
+			category: category_id
+		} = filters;
+
+		type Where = Pick<Transactions.Model, 'user' | 'wallet' | 'category'>;
+		const where: Where = { user: { id: user.id } };
+
+		if (wallet_id) {
+			const wallet = { wallet: { id: wallet_id } };
+			Object.assign(where, wallet);
+		}
+
+		if (account_id) {
+			const account = { wallet: { account: { id: account_id } } };
+			Object.assign(where, where.wallet?.id ? account : {});
+		}
+
+		if (category_id) {
+			const category = { category: { id: category_id } };
+			Object.assign(where, category);
+		}
+
+		return where;
 	}
 
 	private get_transactions_dto(

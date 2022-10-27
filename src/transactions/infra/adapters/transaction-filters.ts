@@ -1,18 +1,13 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Transform, Type } from 'class-transformer';
-import {
-	IsDateString,
-	IsNumber,
-	IsOptional,
-	IsUUID,
-	Max,
-	Min
-} from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsNumber, IsOptional, IsUUID, Max, Min } from 'class-validator';
+import { FindOptionsOrder } from 'typeorm';
 import { Pagination } from '@/shared/infra/adapters/pagination';
+import { KeysOf } from '@/shared/infra/repositories/base.filters';
 import { Transactions } from '@/transactions/domain';
 
 export class TransactionFilters
-	extends Pagination
+	extends Pagination<Transactions.Model>
 	implements Transactions.Filters
 {
 	@IsOptional({ message: 'Period optional value' })
@@ -22,18 +17,6 @@ export class TransactionFilters
 	@Min(1, { message: 'Period should be one of [1 2 3 4]' })
 	@Type(() => Number)
 	period?: number;
-
-	@IsOptional({ message: 'Start date optional value' })
-	@IsDateString({}, { message: 'Start date should be date ISO string' })
-	@ApiPropertyOptional({ format: 'date-string' })
-	@Type(() => Date)
-	start_date?: Date;
-
-	@IsOptional({ message: 'End date optional value' })
-	@IsDateString({}, { message: 'End date should be date ISO string' })
-	@ApiPropertyOptional({ format: 'date-string' })
-	@Type(() => Date)
-	end_date?: Date;
 
 	@IsOptional({ message: 'Wallet optional value' })
 	@IsUUID('4', { message: 'Wallet reference should be a valid id' })
@@ -45,8 +28,12 @@ export class TransactionFilters
 	@ApiPropertyOptional({ example: '00e3d393-5f82-420a-a9ab-cf92a48d1c26' })
 	account?: string;
 
+	@IsOptional({ message: 'Category optional value' })
+	@IsUUID('4', { message: 'Category reference should be a valid id' })
+	@ApiPropertyOptional({ example: '73f2c724-fd47-4e92-b95c-e4f591d4be95' })
+	category?: string;
+
 	@IsOptional()
-	@Transform(({ value }) => value?.split(','))
 	@ApiPropertyOptional({
 		example: 'user,wallet',
 		type: 'string',
@@ -54,4 +41,16 @@ export class TransactionFilters
 			'Comma separated relations. Accepted values [user wallet category]'
 	})
 	relations?: Transactions.Relations[];
+
+	@IsOptional()
+	@ApiPropertyOptional({
+		example: 'id,reference',
+		type: 'string',
+		description: 'Fields will return only selected fields'
+	})
+	fields?: KeysOf<Transactions.Model>[];
+
+	@IsOptional()
+	@ApiPropertyOptional({ example: 'reference,ASC' })
+	sort?: FindOptionsOrder<Transactions.Model>;
 }
