@@ -1,3 +1,4 @@
+import { modelToDomain as accountModelToDomain } from '@/accounts/infra/repositories/account.mapper';
 import { Payment, CashMethod, CreditCard, DebitCard } from '@/payments/domain';
 import { PaymentMethod } from '@/payments/domain/payment/payment-method';
 import { PaymentModel } from './payments.entity';
@@ -13,11 +14,14 @@ export function modelToDomain(payment: PaymentModel): PaymentMethod {
 		[Payment.Type.DEBIT]: DebitCard
 	} as const;
 
-	return new type_based[type]({ ...payment });
+	const { account, ...rest } = payment;
+
+	return new type_based[type]({
+		...rest,
+		account: accountModelToDomain(account)
+	});
 }
 
-export function arrayModelToDomain(
-	payments: PaymentModel[] = []
-): PaymentMethod[] {
-	return payments.map(modelToDomain);
+export function arrayModelToDomain(payments: PaymentModel[]): PaymentMethod[] {
+	return payments?.map(modelToDomain);
 }

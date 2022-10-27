@@ -35,5 +35,5 @@ export function modelToDomain(user: UserModel): User {
 }
 
 export function arrayModelToDomain(users: UserModel[]): User[] {
-	return users.map(modelToDomain);
+	return users?.map(modelToDomain);
 }

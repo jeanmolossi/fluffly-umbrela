@@ -1,6 +1,6 @@
 import { modelToDomain as categoryModelToDomain } from '@/categories/infra/repositories/category.mapper';
 import { modelToDomain as walletModelToDomain } from '@/payments/infra/repositories/payment.mapper';
-import { Transaction, Transactions } from '@/transactions/domain';
+import { Transaction } from '@/transactions/domain';
 import { modelToDomain as userModelToDomain } from '@/users/infra/repository/user.mapper';
 import { TransactionModel } from './transactions.entity';
 
@@ -13,7 +13,7 @@ export function modelToDomain(transaction: TransactionModel): Transaction {
 		category,
 		user,
 		reference,
-		type = Transactions.Type.EXPENSE,
+		type,
 		value,
 		created_at,
 		updated_at
@@ -33,7 +33,7 @@ export function modelToDomain(transaction: TransactionModel): Transaction {
 }
 
 export function arrayModelToDomain(
-	transactions: TransactionModel[] = []
+	transactions: TransactionModel[]
 ): Transaction[] {
-	return transactions.map(modelToDomain);
+	return transactions?.map(modelToDomain);
 }

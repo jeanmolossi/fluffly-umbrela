@@ -16,8 +16,6 @@ export function modelToDomain(category: CategoryModel): Category {
 	});
 }
 
-export function arrayModelToDomain(
-	categories: CategoryModel[] = []
-): Category[] {
-	return categories.map(modelToDomain);
+export function arrayModelToDomain(categories: CategoryModel[]): Category[] {
+	return categories?.map(modelToDomain);
 }
