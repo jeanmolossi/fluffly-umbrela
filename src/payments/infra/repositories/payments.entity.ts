@@ -17,9 +17,6 @@ export class PaymentModel {
 	@PrimaryGeneratedColumn('uuid')
 	id: string;
 
-	@Column({ name: 'user_id' })
-	user_id: string;
-
 	@ManyToOne(() => UserModel)
 	user: UserModel;
 

@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
+import { Account } from '@/accounts/domain';
 import { Payment } from '@/payments/domain';
 import {
 	CashMethod,
@@ -8,6 +9,7 @@ import {
 	PaymentMethod
 } from '@/payments/domain/payment/payment-method';
 import { ConflictErr } from '@/shared/domain/http-errors';
+import { User } from '@/users/domain';
 import { AddWallet } from '../adapters/add-wallet';
 import { PaymentDTO } from '../dto/payment.dto';
 import { CreateWalletRepository } from '../repositories/create.repository';
@@ -46,6 +48,12 @@ export class CreateWalletService {
 			[Payment.Type.DEBIT]: DebitCard
 		};
 
-		return new type_based[type](add_wallet);
+		const { user_id, account_id, ...rest } = add_wallet;
+
+		return new type_based[type]({
+			...rest,
+			user: { id: user_id } as User,
+			account: { id: account_id } as Account
+		});
 	}
 }

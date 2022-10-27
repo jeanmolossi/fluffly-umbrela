@@ -139,11 +139,6 @@ export class DebitCard extends PaymentMethod {
 		_props.type = Payment.Type.DEBIT;
 		_props.limit = null;
 
-		// When credit card has no brand it is invalid credit card
-		if (!_props.brand) {
-			throw new Error('Debit cards should have a brand');
-		}
-
 		super(_props);
 	}
 
