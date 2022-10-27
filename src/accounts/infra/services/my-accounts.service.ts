@@ -27,7 +27,7 @@ export class GetMyAccountsService {
 
 		return plainToClass(AccountListDTO, {
 			accounts: this.get_accounts_dto(accounts),
-			meta: get_pages('accounts', total, page, per_page)
+			meta: get_pages('accounts', total, { page, per_page })
 		});
 	}
 

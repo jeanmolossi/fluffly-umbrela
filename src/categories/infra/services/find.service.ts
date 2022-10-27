@@ -23,7 +23,7 @@ export class FindMyCategoriesService {
 
 		return plainToClass(CategoryListDTO, {
 			categories: this.get_categories_dto(categories),
-			meta: get_pages('categories', total, page, per_page)
+			meta: get_pages('categories', total, { page, per_page })
 		});
 	}
 

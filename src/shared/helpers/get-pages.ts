@@ -1,3 +1,4 @@
+import { BaseFilters } from '../infra/repositories/base.filters';
 import constants from '../shared.constants';
 
 interface Pagination {
@@ -13,13 +14,18 @@ interface PaginationMeta extends Pagination {
 	last_page: string | null;
 }
 
-export function get_pages(
+export function get_pages<T extends object, M = any>(
 	resource: string,
 	total: number,
-	page: number = 1,
-	per_page: number = 15
+	filters: BaseFilters<T, M>
 ): PaginationMeta {
+	const { page = 1, per_page = 15 } = filters;
+
 	const link_base = { resource, total, per_page };
+	Object.assign(link_base, {
+		additional_query: build_additional_query(filters)
+	});
+
 	const last_page_num = Math.ceil(total / per_page);
 
 	let last_page: string;
@@ -48,23 +54,34 @@ export function get_pages(
 	};
 }
 
-interface BuildLink extends Pagination {
+interface BuildLink extends Omit<Pagination, 'total'> {
 	resource: string;
-	aditional_query?: string;
+	additional_query?: string;
 }
 
 function build_link({
 	resource,
 	page,
 	per_page,
-	aditional_query = ''
+	additional_query = ''
 }: BuildLink): string {
 	const query = new URLSearchParams();
 	query.set('page', page.toString());
 	query.set('per_page', per_page.toString());
-	aditional_query = aditional_query ? `&${aditional_query}` : '';
+	additional_query = additional_query ? `&${additional_query}` : '';
 
 	return `${
 		constants.BASE_HOST
-	}/${resource}?${query.toString()}${aditional_query}`;
+	}/${resource}?${query.toString()}${additional_query}`;
+}
+
+function build_additional_query<T extends object, M>(
+	filters: BaseFilters<T, M>
+): string {
+	const keys_to_ignore = ['total', 'page', 'per_page'];
+	const flat_map = ([key, value]) => {
+		if (keys_to_ignore.includes(key)) return [];
+		return [`${key}=${encodeURIComponent(value)}`];
+	};
+	return Object.entries(filters).flatMap(flat_map).join('&');
 }

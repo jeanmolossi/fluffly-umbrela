@@ -23,10 +23,16 @@ export class FindTransactionRepository
 		filter: Partial<Transactions.Model>,
 		filters: Transactions.Filters
 	): Promise<{ transactions: Transaction[]; total: number }> {
+		const where_options = this.options<TransactionModel>(filter, filters);
+
 		const [transactions, total] =
-			await this.transactionsRepository.findAndCount(
-				this.options<TransactionModel>(filter, filters)
-			);
+			await this.transactionsRepository.findAndCount({
+				...where_options,
+				cache: {
+					id: `transactions-${filter.user.id}`,
+					milliseconds: 1000 * 60 * 5
+				}
+			});
 
 		return {
 			transactions: arrayModelToDomain(transactions || []),

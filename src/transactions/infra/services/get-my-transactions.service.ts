@@ -17,15 +17,13 @@ export class GetMyTransactionsService {
 	) {}
 
 	async run(user: User, filters: TransactionFilters) {
-		const { page, per_page } = filters;
-
 		const where = this.parse_filters(user, filters);
 
 		const { transactions, total } = await this.find.run(where, filters);
 
 		return plainToClass(TransactionListDTO, {
 			transactions: this.get_transactions_dto(transactions),
-			meta: get_pages('transactions', total, page, per_page)
+			meta: get_pages('transactions', total, filters)
 		});
 	}
 

@@ -23,7 +23,7 @@ export class FindMyWalletsService {
 
 		return plainToClass(PaymentListDTO, {
 			payments: this.get_payments_dto(payments),
-			meta: get_pages('payments', total, page, per_page)
+			meta: get_pages('payments', total, { page, per_page })
 		});
 	}
 
