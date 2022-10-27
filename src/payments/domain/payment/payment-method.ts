@@ -1,4 +1,5 @@
 import { randomUUID } from 'crypto';
+import { Account } from '@/accounts/domain';
 import { Entity } from '@/shared/domain/entity';
 import { Payment } from './namespace';
 
@@ -9,7 +10,7 @@ export abstract class PaymentMethod extends Entity {
 	 * Use that class to create a new payment method
 	 * @param {Payment.Model} _props the options to create a payment method
 	 */
-	constructor(private readonly _props: Payment.Model) {
+	constructor(private readonly _props: Payment.Model = {} as Payment.Model) {
 		_props.id = _props.id ?? randomUUID();
 
 		super(_props.id);
@@ -23,11 +24,15 @@ export abstract class PaymentMethod extends Entity {
 	}
 
 	get user_id(): string {
-		return this._props.user_id;
+		return this._props.user?.id;
 	}
 
 	get account_id(): string {
-		return this._props.account_id;
+		return this._props.account?.id;
+	}
+
+	get account(): Account {
+		return this._props.account;
 	}
 
 	get name(): string {

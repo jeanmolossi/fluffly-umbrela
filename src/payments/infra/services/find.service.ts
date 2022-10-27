@@ -16,7 +16,7 @@ export class FindMyWalletsService {
 
 	async run(user: User, page?: number, per_page?: number) {
 		const { payments, total } = await this.find.run(
-			{ user_id: user.id },
+			{ user },
 			page,
 			per_page
 		);

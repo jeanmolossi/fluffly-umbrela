@@ -26,11 +26,8 @@ export class PaymentModel {
 	@OneToMany(() => TransactionModel, t => t.wallet)
 	transactions: TransactionModel[];
 
-	@Column({ name: 'account_id' })
-	account_id: string;
-
 	@ManyToOne(() => AccountModel, a => a.wallets)
-	account: AccountModel;
+	account?: AccountModel;
 
 	@Column()
 	name: string;

@@ -1,3 +1,5 @@
+import { Account } from '@/accounts/domain';
+import { User } from '@/users/domain';
 import { PaymentMethod } from './payment-method';
 export namespace Payment {
 	export enum Type {
@@ -15,8 +17,8 @@ export namespace Payment {
 
 	export interface Model {
 		id?: string;
-		user_id: string;
-		account_id: string;
+		user?: User;
+		account?: Account;
 		name: string;
 		type?: Type;
 		limit?: number;

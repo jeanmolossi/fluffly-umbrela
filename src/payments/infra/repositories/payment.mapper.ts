@@ -1,6 +1,7 @@
 import { modelToDomain as accountModelToDomain } from '@/accounts/infra/repositories/account.mapper';
 import { Payment, CashMethod, CreditCard, DebitCard } from '@/payments/domain';
 import { PaymentMethod } from '@/payments/domain/payment/payment-method';
+import { modelToDomain as userModelToDomain } from '@/users/infra/repository/user.mapper';
 import { PaymentModel } from './payments.entity';
 
 export function modelToDomain(payment: PaymentModel): PaymentMethod {
@@ -14,10 +15,11 @@ export function modelToDomain(payment: PaymentModel): PaymentMethod {
 		[Payment.Type.DEBIT]: DebitCard
 	} as const;
 
-	const { account, ...rest } = payment;
+	const { account, user, ...rest } = payment;
 
 	return new type_based[type]({
 		...rest,
+		user: userModelToDomain(user),
 		account: accountModelToDomain(account)
 	});
 }

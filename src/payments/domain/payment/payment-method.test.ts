@@ -1,4 +1,5 @@
 import { randomUUID } from 'crypto';
+import { User } from '@/users/domain';
 import { Payment } from './namespace';
 import { CashMethod, CreditCard, DebitCard } from './payment-method';
 
@@ -10,8 +11,7 @@ describe('Domain > Payment Method', function () {
 
 			const cash = new CashMethod({
 				name: 'Dinheiro',
-				account_id: account_id_mock,
-				user_id: user_id_mock
+				user: { id: user_id_mock } as User
 			});
 
 			expect(cash.id).not.toBeUndefined();
@@ -35,8 +35,7 @@ describe('Domain > Payment Method', function () {
 				name: 'Bradesco Grafite',
 				limit: expect_limit,
 				brand: expect_brand,
-				account_id: account_id_mock,
-				user_id: user_id_mock
+				user: { id: user_id_mock } as User
 			});
 
 			expect(credit_card.id).not.toBeUndefined();
@@ -52,7 +51,10 @@ describe('Domain > Payment Method', function () {
 			const account_id_mock = randomUUID();
 			const user_id_mock = randomUUID();
 
-			const base = { user_id: user_id_mock, account_id: account_id_mock };
+			const base = {
+				user: { id: user_id_mock } as User,
+				account_id: account_id_mock
+			};
 
 			// it will throw the same error if limit is 0 (zero)
 			const should_have_limit = () =>
@@ -82,8 +84,7 @@ describe('Domain > Payment Method', function () {
 				name: 'Bradesco Exclusive',
 				limit: 1134001,
 				brand: Payment.Brand.ELO,
-				user_id: user_id_mock,
-				account_id: account_id_mock
+				user: { id: user_id_mock } as User
 			});
 
 			expect(debit_card.id).not.toBeUndefined();
@@ -99,7 +100,10 @@ describe('Domain > Payment Method', function () {
 			const account_id_mock = randomUUID();
 			const user_id_mock = randomUUID();
 
-			const base = { user_id: user_id_mock, account_id: account_id_mock };
+			const base = {
+				user: { id: user_id_mock } as User,
+				account_id: account_id_mock
+			};
 
 			const should_have_brand = () =>
 				new DebitCard({ name: 'Without brand err', ...base });
