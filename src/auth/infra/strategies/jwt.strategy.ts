@@ -31,6 +31,8 @@ export class JwtStrategy extends PassportStrategy(JwtStrategyBase) {
 	}
 
 	private static fromBasicHeader(request: Request): string {
-		return request.headers.authorization;
+		return decodeURIComponent(
+			request.headers.authorization.replace(/basic\s/gi, '')
+		);
 	}
 }
