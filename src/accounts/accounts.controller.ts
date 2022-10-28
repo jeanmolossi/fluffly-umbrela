@@ -6,9 +6,9 @@ import {
 	ApiTags
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@/auth/infra/guards/jwt-auth.guard';
-import { Pagination } from '@/shared/infra/adapters/pagination';
 import { AuthUser } from '@/shared/infra/decorators/user.decorator';
 import { User } from '@/users/domain';
+import { AccountFilters } from './infra/adapters/account-filters';
 import { AddAccount } from './infra/adapters/add-account';
 import { AccountListDTO } from './infra/dto/account-list.dto';
 import { AccountDTO } from './infra/dto/account.dto';
@@ -34,7 +34,10 @@ export class AccountsController {
 
 	@Get()
 	@ApiOkResponse({ type: AccountListDTO })
-	async myAccounts(@AuthUser() user: User, @Query() pagination: Pagination) {
+	async myAccounts(
+		@AuthUser() user: User,
+		@Query() pagination: AccountFilters
+	) {
 		return await this.getMyAccountsService.run(user, pagination);
 	}
 }

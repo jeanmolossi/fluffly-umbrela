@@ -17,17 +17,16 @@ export class GetMyAccountsService {
 
 	async run(
 		user: User,
-		{ page, per_page }: Pagination
+		filters: Pagination<Accounts.Model, Accounts.Relations>
 	): Promise<AccountListDTO> {
 		const { accounts, total } = await this.find.run(
-			{ user },
-			page,
-			per_page
+			{ user: { id: user.id } as User },
+			filters
 		);
 
 		return plainToClass(AccountListDTO, {
 			accounts: this.get_accounts_dto(accounts),
-			meta: get_pages('accounts', total, { page, per_page })
+			meta: get_pages('accounts', total, filters)
 		});
 	}
 

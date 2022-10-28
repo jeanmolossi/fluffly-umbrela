@@ -1,8 +1,11 @@
 import { PaymentMethod } from '@/payments/domain';
+import { BaseFilters } from '@/shared/infra/repositories/base.filters';
 import { User } from '@/users/domain';
 import { Account } from './account';
 
 export namespace Accounts {
+	export type Relations = 'user' | 'wallets';
+
 	export interface Model {
 		id?: string;
 		user?: User;
@@ -27,8 +30,7 @@ export namespace Accounts {
 	export interface FindRepository {
 		run(
 			filter: Partial<Model>,
-			page?: number,
-			per_page?: number
+			filters: BaseFilters<Model, Relations>
 		): Promise<{ accounts: Account[]; total: number }>;
 	}
 }

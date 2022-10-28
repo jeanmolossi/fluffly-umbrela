@@ -15,7 +15,7 @@ export class AccountDTO {
 	user_id: string;
 
 	@Expose()
-	@ApiProperty({ name: 'Carteira' })
+	@ApiProperty({ example: 'Carteira' })
 	name: string;
 
 	@Expose()

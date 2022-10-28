@@ -9,14 +9,6 @@ export class Account extends Entity {
 	) {
 		_props.id = _props.id ?? randomUUID();
 		super(_props.id);
-
-		// Initialize all optional props
-		_props.initial_amount = _props.initial_amount ?? 0;
-		_props.current_amount = _props.current_amount ?? 0;
-		_props.bank_id = _props.bank_id ?? 1;
-		_props.bank_name = _props.bank_name ?? 'Carteira';
-		_props.created_at = _props.created_at ?? new Date();
-		_props.updated_at = _props.updated_at ?? new Date();
 	}
 
 	get user_id(): string {
