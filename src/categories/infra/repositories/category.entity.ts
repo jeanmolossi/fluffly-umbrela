@@ -18,23 +18,17 @@ export class CategoryModel {
 	@Column()
 	name: string;
 
-	@Column({ nullable: true, type: 'uuid' })
-	parent_id?: string;
-
 	@ManyToOne(() => CategoryModel, category => category.sub_categories)
 	parent?: CategoryModel;
 
-	@OneToMany(() => CategoryModel, c => c)
+	@OneToMany(() => CategoryModel, c => c.parent)
 	sub_categories?: CategoryModel[];
 
-	@Column({ type: 'uuid' })
-	user_id?: string;
-
-	@OneToMany(() => UserModel, u => u.categories)
-	user: UserModel;
+	@ManyToOne(() => UserModel, u => u.categories)
+	user?: UserModel;
 
 	@OneToMany(() => TransactionModel, t => t.category)
-	transactions: TransactionModel[];
+	transactions?: TransactionModel[];
 
 	@CreateDateColumn()
 	created_at: Date;

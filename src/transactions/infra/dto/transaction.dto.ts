@@ -21,7 +21,7 @@ export class TransactionDTO {
 	wallet?: PaymentDTO;
 
 	@Expose()
-	@ApiPropertyOptional({ type: CategoryDTO })
+	@ApiPropertyOptional({ type: () => CategoryDTO })
 	@Transform(({ value }) => plainToClass(CategoryDTO, value))
 	category?: CategoryDTO;
 

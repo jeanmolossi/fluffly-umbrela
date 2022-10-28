@@ -1,6 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Exclude, Expose, Transform } from 'class-transformer';
+import { Exclude, Expose, plainToClass, Transform } from 'class-transformer';
 import constants from '@/shared/shared.constants';
+import { TransactionDTO } from '@/transactions/infra/dto/transaction.dto';
+import { UserDTO } from '@/users/infra/dto/user.dto';
 
 const self_example = (id: string) => `${constants.BASE_HOST}/categories/${id}`;
 
@@ -11,24 +13,36 @@ export class CategoryDTO {
 	id: string;
 
 	@Expose()
-	@ApiPropertyOptional({ example: '973ab597-04a2-4484-91af-baf57dcaf737' })
-	parent_id?: string;
+	@ApiPropertyOptional({ type: () => UserDTO })
+	@Transform(({ value }) => plainToClass(UserDTO, value))
+	user?: UserDTO;
 
 	@Expose()
-	@ApiProperty({ example: 'cd9746b9-9b99-4b91-a0ea-1c75f15a76be' })
-	user_id?: string;
+	@ApiPropertyOptional({ type: () => CategoryDTO })
+	@Transform(({ value }) => plainToClass(CategoryDTO, value))
+	parent?: CategoryDTO;
 
 	@Expose()
-	@ApiProperty({ example: 'Transporte' })
-	name: string;
+	@ApiPropertyOptional({ type: () => CategoryDTO, isArray: true })
+	@Transform(({ value }) => value?.map(v => plainToClass(CategoryDTO, v)))
+	sub_categories?: CategoryDTO[];
 
 	@Expose()
-	@ApiProperty({ example: new Date(2022, 1, 1) })
-	created_at: Date;
+	@ApiPropertyOptional({ example: 'Transporte' })
+	name?: string;
 
 	@Expose()
-	@ApiProperty({ example: new Date(2022, 1, 1) })
-	updated_at: Date;
+	@ApiPropertyOptional({ type: () => TransactionDTO, isArray: true })
+	@Transform(({ value }) => value?.map(v => plainToClass(TransactionDTO, v)))
+	transactions?: TransactionDTO[];
+
+	@Expose()
+	@ApiPropertyOptional({ example: new Date(2022, 1, 1) })
+	created_at?: Date;
+
+	@Expose()
+	@ApiPropertyOptional({ example: new Date(2022, 1, 1) })
+	updated_at?: Date;
 
 	@Expose()
 	@Transform(({ obj }) => self_example(obj.id))

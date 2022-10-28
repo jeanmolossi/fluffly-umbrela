@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Categories, Category } from '@/categories/domain';
 import { ConflictErr, NotFoundErr } from '@/shared/domain/http-errors';
+import { User } from '@/users/domain';
 import { AddCategory } from '../adapters/add-category';
 import { CreateCategoryRepository } from '../repositories/create.repository';
 import { FindOneCategoryRepository } from '../repositories/find-one.repository';
@@ -39,7 +40,10 @@ export class CreateCategoryService {
 		name,
 		user_id
 	}: Category): Promise<boolean> {
-		const category = await this.findOne.run({ name, user_id });
+		const category = await this.findOne.run({
+			name,
+			user: { id: user_id } as User
+		});
 		return Boolean(category?.id);
 	}
 
@@ -47,7 +51,11 @@ export class CreateCategoryService {
 		id: string,
 		user_id: string
 	): Promise<boolean> {
-		const subcategory = await this.findOne.run({ id, user_id });
+		const subcategory = await this.findOne.run({
+			id,
+			user: { id: user_id } as User
+		});
+
 		return Boolean(subcategory?.id);
 	}
 }

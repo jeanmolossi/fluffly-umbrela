@@ -1,11 +1,17 @@
+import { BaseFilters } from '@/shared/infra/repositories/base.filters';
+import { Transaction } from '@/transactions/domain';
+import { User } from '@/users/domain';
 import { Category } from './category';
 
 export namespace Categories {
+	export type Relations = 'user' | 'category';
 	export interface Model {
 		id?: string;
-		parent_id?: string;
-		user_id?: string;
+		user?: User;
+		parent?: Category;
+		sub_categories?: Category[];
 		name: string;
+		transactions?: Transaction[];
 		created_at?: Date;
 		updated_at?: Date;
 	}
@@ -21,8 +27,7 @@ export namespace Categories {
 	export interface FindRepository {
 		run(
 			filter: Partial<Model>,
-			page?: number,
-			per_page?: number
+			filters: BaseFilters<Model, Relations>
 		): Promise<{ categories: Category[]; total: number }>;
 	}
 }

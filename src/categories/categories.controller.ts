@@ -5,6 +5,7 @@ import { JwtAuthGuard } from '@/auth/infra/guards/jwt-auth.guard';
 import { Pagination } from '@/shared/infra/adapters/pagination';
 import { AuthUser } from '@/shared/infra/decorators/user.decorator';
 import { User } from '@/users/domain';
+import { Categories } from './domain';
 import { AddCategory } from './infra/adapters/add-category';
 import { CategoryListDTO } from './infra/dto/category-list.dto';
 import { CategoryDTO } from './infra/dto/category.dto';
@@ -37,8 +38,8 @@ export class CategoriesController {
 	@ApiOkResponse({ type: CategoryListDTO })
 	async getMyCategories(
 		@AuthUser() user: User,
-		@Query() { page, per_page }: Pagination
+		@Query() filters: Pagination<Categories.Model, Categories.Relations>
 	) {
-		return await this.findService.run(user, page, per_page);
+		return await this.findService.run(user, filters);
 	}
 }

@@ -1,35 +1,37 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Categories, Category } from '@/categories/domain';
+import { BaseFilters } from '@/shared/infra/repositories/base.filters';
+import { BaseRepository } from '@/shared/infra/repositories/base.repository';
 import { CategoryModel } from './category.entity';
 import { arrayModelToDomain } from './category.mapper';
 
-export class FindCategoryRepository implements Categories.FindRepository {
+export class FindCategoryRepository
+	extends BaseRepository
+	implements Categories.FindRepository
+{
 	constructor(
 		@InjectRepository(CategoryModel)
 		private readonly categoriesRepository: Repository<CategoryModel>
-	) {}
+	) {
+		super();
+	}
 
 	async run(
 		filter: Partial<Categories.Model>,
-		page?: number,
-		per_page?: number
+		filters: BaseFilters<Categories.Model, Categories.Relations>
 	): Promise<{ categories: Category[]; total: number }> {
+		const where = this.options<CategoryModel>(filter, filters);
+
 		const [categories, total] =
 			await this.categoriesRepository.findAndCount({
-				where: filter,
+				...where,
 				cache: {
-					id: 'categories',
-					milliseconds: 1000 * 60 // 1 minute
-				},
-				take: per_page,
-				skip: this.offset(page, per_page)
+					id: `categories-${filter.user?.id}`,
+					milliseconds: 1000 * 60 * 5 // 5 minute
+				}
 			});
 
 		return { categories: arrayModelToDomain(categories), total };
-	}
-
-	private offset(page: number = 1, per_page: number = 15): number {
-		return (page - 1) * per_page;
 	}
 }

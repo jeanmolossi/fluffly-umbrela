@@ -6,7 +6,9 @@ import { User } from '@/users/domain';
 import { Transactions } from './namespace';
 
 export class Transaction extends Entity {
-	constructor(private readonly _props: Transactions.Model) {
+	constructor(
+		private readonly _props: Transactions.Model = {} as Transactions.Model
+	) {
 		_props.id = _props.id ?? randomUUID();
 
 		super(_props.id);
