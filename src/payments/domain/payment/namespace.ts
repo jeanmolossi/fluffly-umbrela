@@ -1,4 +1,5 @@
 import { Account } from '@/accounts/domain';
+import { BaseFilters } from '@/shared/infra/repositories/base.filters';
 import { User } from '@/users/domain';
 import { PaymentMethod } from './payment-method';
 export namespace Payment {
@@ -14,6 +15,8 @@ export namespace Payment {
 		'ELO' = 'ELO',
 		'AMERICAN_EXPRESS' = 'AMERICAN_EXPRESS'
 	}
+
+	export type Relations = 'user' | 'account';
 
 	export interface Model {
 		id?: string;
@@ -38,8 +41,7 @@ export namespace Payment {
 	export interface FindRepository {
 		run(
 			filter: Partial<Model>,
-			page?: number,
-			per_page?: number
+			filters: BaseFilters<Model, Relations>
 		): Promise<{ payments: PaymentMethod[]; total: number }>;
 	}
 }

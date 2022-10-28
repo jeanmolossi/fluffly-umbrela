@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
 import { Payment, PaymentMethod } from '@/payments/domain';
 import { get_pages } from '@/shared/helpers/get-pages';
+import { Pagination } from '@/shared/infra/adapters/pagination';
 import { User } from '@/users/domain';
 import { PaymentListDTO } from '../dto/payment-list.dto';
 import { PaymentDTO } from '../dto/payment.dto';
@@ -14,16 +15,18 @@ export class FindMyWalletsService {
 		private readonly find: Payment.FindRepository
 	) {}
 
-	async run(user: User, page?: number, per_page?: number) {
+	async run(
+		user: User,
+		filters: Pagination<Payment.Model, Payment.Relations>
+	) {
 		const { payments, total } = await this.find.run(
-			{ user },
-			page,
-			per_page
+			{ user: { id: user.id } as User },
+			filters
 		);
 
 		return plainToClass(PaymentListDTO, {
 			payments: this.get_payments_dto(payments),
-			meta: get_pages('payments', total, { page, per_page })
+			meta: get_pages('payments', total, filters)
 		});
 	}
 

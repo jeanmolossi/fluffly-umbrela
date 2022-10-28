@@ -15,6 +15,7 @@ import { Pagination } from '@/shared/infra/adapters/pagination';
 import { AuthUser } from '@/shared/infra/decorators/user.decorator';
 import constants from '@/shared/shared.constants';
 import { User } from '@/users/domain';
+import { Payment } from './domain';
 import { AddWallet } from './infra/adapters/add-wallet';
 import { PaymentListDTO } from './infra/dto/payment-list.dto';
 import { CreateWalletService } from './infra/services/create.service';
@@ -48,9 +49,9 @@ export class PaymentsController {
 	async getMyPayments(
 		@AuthUser() user: User,
 		@Response() response: eResponse,
-		@Query() { page, per_page }: Pagination
+		@Query() filters: Pagination<Payment.Model, Payment.Relations>
 	) {
-		const result = await this.find.run(user, page, per_page);
+		const result = await this.find.run(user, filters);
 
 		return response.json(result);
 	}

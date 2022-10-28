@@ -2,6 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude, Expose, plainToClass, Transform } from 'class-transformer';
 import { AccountDTO } from '@/accounts/infra/dto/account.dto';
 import { Payment } from '@/payments/domain';
+import { UserDTO } from '@/users/infra/dto/user.dto';
 
 @Exclude()
 export class PaymentDTO {
@@ -10,11 +11,12 @@ export class PaymentDTO {
 	id: string;
 
 	@Expose()
-	@ApiProperty({ example: 'cd9746b9-9b99-4b91-a0ea-1c75f15a76be' })
-	user_id: string;
+	@ApiPropertyOptional({ type: () => UserDTO })
+	@Transform(({ value }) => plainToClass(UserDTO, value))
+	user?: UserDTO;
 
 	@Expose()
-	@ApiPropertyOptional({ type: AccountDTO })
+	@ApiPropertyOptional({ type: () => AccountDTO })
 	@Transform(({ value }) => plainToClass(AccountDTO, value))
 	account?: AccountDTO;
 

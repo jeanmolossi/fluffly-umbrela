@@ -1,6 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Exclude, Expose, Transform } from 'class-transformer';
+import { Exclude, Expose, plainToClass, Transform } from 'class-transformer';
+import { PaymentDTO } from '@/payments/infra/dto/payment.dto';
 import constants from '@/shared/shared.constants';
+import { UserDTO } from '@/users/infra/dto/user.dto';
 
 const self_example = (id: string) => `${constants.BASE_HOST}/accounts/${id}`;
 
@@ -11,8 +13,17 @@ export class AccountDTO {
 	id: string;
 
 	@Expose()
-	@ApiProperty({ example: '11f7c925-2cff-4522-9c75-8f6c288fe722' })
-	user_id: string;
+	@ApiPropertyOptional({
+		type: UserDTO,
+		example: '11f7c925-2cff-4522-9c75-8f6c288fe722'
+	})
+	@Transform(({ value }) => plainToClass(UserDTO, value))
+	user?: UserDTO;
+
+	@Expose()
+	@ApiPropertyOptional({ type: () => PaymentDTO, isArray: true })
+	@Transform(({ value }) => value?.map(v => plainToClass(PaymentDTO, v)))
+	wallets?: PaymentDTO[];
 
 	@Expose()
 	@ApiProperty({ example: 'Carteira' })

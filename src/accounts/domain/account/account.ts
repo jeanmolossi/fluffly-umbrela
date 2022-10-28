@@ -1,4 +1,5 @@
 import { randomUUID } from 'crypto';
+import { PaymentMethod } from '@/payments/domain';
 import { Entity } from '@/shared/domain/entity';
 import { User } from '@/users/domain';
 import { Accounts } from './namespace';
@@ -17,6 +18,10 @@ export class Account extends Entity {
 
 	get user(): User {
 		return this._props.user;
+	}
+
+	get wallets(): PaymentMethod[] {
+		return this._props.wallets;
 	}
 
 	get name(): string {

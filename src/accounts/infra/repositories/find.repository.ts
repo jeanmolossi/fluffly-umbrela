@@ -21,7 +21,7 @@ export class FindAccountRepository
 
 	async run(
 		filter: Partial<Accounts.Model>,
-		filters: BaseFilters<Accounts.Model>
+		filters: BaseFilters<Accounts.Model, Accounts.Relations>
 	): Promise<{ accounts: Account[]; total: number }> {
 		const where = this.options<AccountModel>(filter, filters);
 
