@@ -25,7 +25,6 @@ export namespace Transactions {
 	export type Relations = 'user' | 'wallet' | 'category';
 
 	export interface Filters extends BaseFilters<Model, Relations> {
-		period?: number;
 		wallet?: string;
 		account?: string;
 	}
