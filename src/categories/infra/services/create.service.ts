@@ -16,7 +16,11 @@ export class CreateCategoryService {
 	) {}
 
 	async run(add_category: AddCategory): Promise<Category> {
-		const category = new Category(add_category);
+		const category = new Category({
+			...add_category,
+			user: { id: add_category.user_id } as User,
+			parent: { id: add_category.parent_id } as Category
+		});
 
 		if (await this.category_already_exists(category)) {
 			throw new ConflictErr('Category already exists');

@@ -1,6 +1,7 @@
 import { randomUUID } from 'crypto';
 import { PaymentMethod } from '@/payments/domain';
 import { Entity } from '@/shared/domain/entity';
+import { Transaction, Transactions } from '@/transactions/domain';
 import { User } from '@/users/domain';
 import { Accounts } from './namespace';
 
@@ -62,5 +63,14 @@ export class Account extends Entity {
 		}
 
 		this._props.initial_amount = newAmount;
+	}
+
+	public registerTransaction(transaction: Transaction) {
+		const { value, type } = transaction;
+
+		const transaction_value =
+			type === Transactions.Type.EXPENSE ? value * -1 : value;
+
+		this._props.current_amount += transaction_value;
 	}
 }

@@ -33,4 +33,9 @@ export namespace Accounts {
 			filters: BaseFilters<Model, Relations>
 		): Promise<{ accounts: Account[]; total: number }>;
 	}
+
+	export type Updater = (account: Account) => Account;
+	export interface UpdateRepository {
+		run(account_id: string, cb: Updater): Promise<Account>;
+	}
 }

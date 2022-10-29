@@ -5,6 +5,11 @@ import constants from '@/shared/shared.constants';
 import { UserDTO } from '@/users/infra/dto/user.dto';
 
 const self_example = (id: string) => `${constants.BASE_HOST}/accounts/${id}`;
+const to_brl = (value: number) =>
+	new Intl.NumberFormat('pt-BR', {
+		currency: 'BRL',
+		style: 'currency'
+	}).format((value || 0) / 100);
 
 @Exclude()
 export class AccountDTO {
@@ -34,8 +39,18 @@ export class AccountDTO {
 	initial_amount: number;
 
 	@Expose()
+	@ApiProperty({ example: 'R$ 348,98' })
+	@Transform(({ obj }) => to_brl(obj.initial_amount))
+	initial_amount_fmt: string;
+
+	@Expose()
 	@ApiProperty({ example: 36898 })
 	current_amount: number;
+
+	@Expose()
+	@ApiProperty({ example: 'R$ 368,98' })
+	@Transform(({ obj }) => to_brl(obj.current_amount))
+	current_amount_fmt: string;
 
 	@Expose()
 	@ApiProperty({ example: 0 })

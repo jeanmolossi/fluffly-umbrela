@@ -15,11 +15,8 @@ export class AccountModel {
 	@PrimaryGeneratedColumn('uuid')
 	id: string;
 
-	@Column({ type: 'uuid' })
-	user_id: string;
-
 	@ManyToOne(() => UserModel, u => u.accounts)
-	user: UserModel;
+	user?: UserModel;
 
 	@OneToMany(() => PaymentModel, w => w.account)
 	wallets: PaymentModel[];

@@ -6,6 +6,7 @@ import { AccountModel } from './infra/repositories/account.entity';
 import { CreateAccountRepository } from './infra/repositories/create.repository';
 import { FindOneAccountRepository } from './infra/repositories/find-one.repository';
 import { FindAccountRepository } from './infra/repositories/find.repository';
+import { UpdateAccountRepository } from './infra/repositories/update.repository';
 import { AddAccountService } from './infra/services/add-account.service';
 import { GetMyAccountsService } from './infra/services/my-accounts.service';
 
@@ -17,6 +18,7 @@ import { GetMyAccountsService } from './infra/services/my-accounts.service';
 		CreateAccountRepository,
 		FindOneAccountRepository,
 		FindAccountRepository,
+		UpdateAccountRepository,
 		// Services
 		AddAccountService,
 		GetMyAccountsService,

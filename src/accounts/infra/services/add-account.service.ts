@@ -25,7 +25,10 @@ export class AddAccountService {
 		if (account_already_exists)
 			throw new ConflictErr('Account already exists');
 
-		const account = new Account({ ...add_account });
+		const account = new Account({
+			...add_account,
+			user: { id: add_account.user_id } as User
+		});
 		const created_account = await this.create.run(account);
 
 		return plainToClass(AccountDTO, created_account);

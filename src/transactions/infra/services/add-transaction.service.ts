@@ -61,10 +61,14 @@ export class AddTransactionService {
 			throw new ConflictErr('Transaction already exists');
 		}
 
-		const transaction_added_event = new TransactionAddedEvent();
-		transaction_added_event.value = add_transaction.value;
+		const transaction_added_event = new TransactionAddedEvent(
+			add_transaction
+		);
 
-		this.emitter.emit('transaction.added', transaction_added_event);
+		await this.emitter.emitAsync(
+			'transaction.added',
+			transaction_added_event
+		);
 
 		return plainToClass(
 			TransactionDTO,

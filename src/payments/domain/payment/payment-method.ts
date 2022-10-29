@@ -1,6 +1,7 @@
 import { randomUUID } from 'crypto';
 import { Account } from '@/accounts/domain';
 import { Entity } from '@/shared/domain/entity';
+import { User } from '@/users/domain';
 import { Payment } from './namespace';
 
 export abstract class PaymentMethod extends Entity {
@@ -25,6 +26,10 @@ export abstract class PaymentMethod extends Entity {
 
 	get user_id(): string {
 		return this._props.user?.id;
+	}
+
+	get user(): User {
+		return this._props.user;
 	}
 
 	get account_id(): string {
@@ -107,17 +112,6 @@ export class CreditCard extends PaymentMethod {
 	constructor(_props: Payment.Model = {} as Payment.Model) {
 		// Credit card ever will have CREDIT type
 		_props.type = Payment.Type.CREDIT;
-
-		// When no limit or limit less than or equal zero
-		// it is invalid credit card
-		if (_props.limit <= 0 || !_props.limit) {
-			throw new Error('Credit cards should have limit');
-		}
-
-		// When credit card has no brand it is invalid credit card
-		if (!_props.brand) {
-			throw new Error('Credit cards should have a brand');
-		}
 
 		super(_props);
 	}
