@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
-import { Users } from '@/users/domain';
+import { User, Users } from '@/users/domain';
 import { RegisterUser } from '../adapters/register-user';
 import { UserDTO } from '../dto/user.dto';
 import { CreateRepository } from '../repository/create.repository';
@@ -13,7 +13,9 @@ export class CreateService {
 	) {}
 
 	async run(register: RegisterUser): Promise<UserDTO> {
-		const user = await this.createRepository.run(register);
+		const new_user = new User(register);
+		new_user.encryptPassword();
+		const user = await this.createRepository.run(new_user);
 		return plainToClass(UserDTO, user);
 	}
 }

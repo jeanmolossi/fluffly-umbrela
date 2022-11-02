@@ -13,15 +13,12 @@ export class CreateRepository implements Users.CreateRepository {
 		private readonly usersRepository: Repository<UserModel>
 	) {}
 
-	async run(user: Users.Model): Promise<User> {
-		const new_user = new User(user);
-
-		if (await this.userAlreadyExists(new_user.email)) {
+	async run(user: User): Promise<User> {
+		if (await this.userAlreadyExists(user.email)) {
 			throw new ConflictErr('User already exists');
 		}
 
-		new_user.encryptPassword();
-		const created_user = this.usersRepository.create(new_user);
+		const created_user = this.usersRepository.create(user);
 		const saved_user = await this.usersRepository.save(created_user);
 
 		return modelToDomain(saved_user);
