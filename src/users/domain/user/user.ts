@@ -67,7 +67,7 @@ export class User extends Entity {
 	 *
 	 * @return {void} void
 	 */
-	public encrypyPassword(): void {
+	public encryptPassword(): void {
 		this._props.password = hashSync(this._props.password);
 	}
 
@@ -94,7 +94,7 @@ export class User extends Entity {
 		// when all validations pass we re-assign password to new one
 		this._props.password = new_password;
 		// after new password re-assign encrypt that
-		this.encrypyPassword();
+		this.encryptPassword();
 	}
 
 	public resetPasswrod(passwordReset: Users.ResetPassword) {
@@ -107,6 +107,6 @@ export class User extends Entity {
 		// when all validations pass we re-assign password to new one
 		this._props.password = new_password;
 		// after new password re-assign encrypt that
-		this.encrypyPassword();
+		this.encryptPassword();
 	}
 }

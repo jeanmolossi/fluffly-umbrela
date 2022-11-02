@@ -20,7 +20,7 @@ export class CreateRepository implements Users.CreateRepository {
 			throw new ConflictErr('User already exists');
 		}
 
-		new_user.encrypyPassword();
+		new_user.encryptPassword();
 		const created_user = this.usersRepository.create(new_user);
 		const saved_user = await this.usersRepository.save(created_user);
 

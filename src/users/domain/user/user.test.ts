@@ -9,7 +9,7 @@ describe('Domain > User', function () {
 		};
 
 		const user = new User({ ...want });
-		user.encrypyPassword();
+		user.encryptPassword();
 
 		expect(user.id).not.toBeUndefined();
 		expect(user.name).toBe(want.name);
