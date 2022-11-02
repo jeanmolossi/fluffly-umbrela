@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { Payment, PaymentMethod } from '@/payments/domain';
 import { BaseFilters } from '@/shared/infra/repositories/base.filters';
 import { BaseRepository } from '@/shared/infra/repositories/base.repository';
-import { arrayModelToDomain } from './payment.mapper';
+import { PaymentMapper } from './payment.mapper';
 import { PaymentModel } from './payments.entity';
 
 @Injectable()
@@ -32,6 +32,6 @@ export class FindWalletRepository
 			}
 		});
 
-		return { payments: arrayModelToDomain(payments), total };
+		return { payments: PaymentMapper.arrayModelToDomain(payments), total };
 	}
 }

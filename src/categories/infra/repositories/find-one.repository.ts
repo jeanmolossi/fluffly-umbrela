@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Categories, Category } from '@/categories/domain';
 import { CategoryModel } from './category.entity';
-import { modelToDomain } from './category.mapper';
+import { CategoryMapper } from './category.mapper';
 
 @Injectable()
 export class FindOneCategoryRepository implements Categories.FindOneRepository {
@@ -17,6 +17,6 @@ export class FindOneCategoryRepository implements Categories.FindOneRepository {
 
 		if (!category) return null;
 
-		return modelToDomain(category);
+		return CategoryMapper.modelToDomain(category);
 	}
 }

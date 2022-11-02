@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { Transaction } from '@/transactions/domain';
 import { Transactions } from '@/transactions/domain/transaction/namespace';
 import { TransactionModel } from './transactions.entity';
-import { modelToDomain } from './transactions.mapper';
+import { TransactionMapper } from './transactions.mapper';
 
 @Injectable()
 export class FindOneTransactionRepository
@@ -22,6 +22,6 @@ export class FindOneTransactionRepository
 
 		if (!found_transaction) return null;
 
-		return modelToDomain(found_transaction);
+		return TransactionMapper.modelToDomain(found_transaction);
 	}
 }

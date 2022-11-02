@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { NotFoundErr } from '@/shared/domain/http-errors';
 import { User, Users } from '@/users/domain';
 import { UserModel } from './user.entity';
-import { modelToDomain } from './user.mapper';
+import { UserMapper } from './user.mapper';
 
 @Injectable()
 export class FindOneRepository implements Users.FindOneRepository {
@@ -14,14 +13,7 @@ export class FindOneRepository implements Users.FindOneRepository {
 	) {}
 
 	async run(filter: Partial<Users.Model>): Promise<User> {
-		const user = await this.usersRepository.findOne({
-			where: filter
-		});
-
-		if (!user) {
-			throw new NotFoundErr('User not found');
-		}
-
-		return modelToDomain(user);
+		const user = await this.usersRepository.findOneBy(filter);
+		return UserMapper.modelToDomain(user);
 	}
 }

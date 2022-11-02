@@ -5,7 +5,7 @@ import { BaseRepository } from '@/shared/infra/repositories/base.repository';
 import { Transaction } from '@/transactions/domain';
 import { Transactions } from '@/transactions/domain/transaction/namespace';
 import { TransactionModel } from './transactions.entity';
-import { arrayModelToDomain } from './transactions.mapper';
+import { TransactionMapper } from './transactions.mapper';
 
 @Injectable()
 export class FindTransactionRepository
@@ -35,7 +35,7 @@ export class FindTransactionRepository
 			});
 
 		return {
-			transactions: arrayModelToDomain(transactions || []),
+			transactions: TransactionMapper.arrayModelToDomain(transactions),
 			total
 		};
 	}

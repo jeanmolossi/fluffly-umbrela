@@ -4,7 +4,7 @@ import { Categories, Category } from '@/categories/domain';
 import { BaseFilters } from '@/shared/infra/repositories/base.filters';
 import { BaseRepository } from '@/shared/infra/repositories/base.repository';
 import { CategoryModel } from './category.entity';
-import { arrayModelToDomain } from './category.mapper';
+import { CategoryMapper } from './category.mapper';
 
 export class FindCategoryRepository
 	extends BaseRepository
@@ -32,6 +32,9 @@ export class FindCategoryRepository
 				}
 			});
 
-		return { categories: arrayModelToDomain(categories), total };
+		return {
+			categories: CategoryMapper.arrayModelToDomain(categories),
+			total
+		};
 	}
 }

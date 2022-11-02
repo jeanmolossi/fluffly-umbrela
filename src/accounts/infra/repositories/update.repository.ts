@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Account, Accounts } from '@/accounts/domain';
 import { AccountModel } from './account.entity';
-import { modelToDomain } from './account.mapper';
+import { AccountMapper } from './account.mapper';
 
 @Injectable()
 export class UpdateAccountRepository implements Accounts.UpdateRepository {
@@ -15,11 +15,11 @@ export class UpdateAccountRepository implements Accounts.UpdateRepository {
 	async run(account_id: string, cb: Accounts.Updater): Promise<Account> {
 		const account = await this.repository.findOneBy({ id: account_id });
 
-		const updated_account = cb(modelToDomain(account));
+		const updated_account = cb(AccountMapper.modelToDomain(account));
 
 		const orm_account = this.repository.create(updated_account);
 		const saved_account = await this.repository.save(orm_account);
 
-		return modelToDomain(saved_account);
+		return AccountMapper.modelToDomain(saved_account);
 	}
 }

@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { Transaction } from '@/transactions/domain';
 import { Transactions } from '@/transactions/domain/transaction/namespace';
 import { TransactionModel } from './transactions.entity';
-import { modelToDomain } from './transactions.mapper';
+import { TransactionMapper } from './transactions.mapper';
 
 @Injectable()
 export class CreateTransactionRepository
@@ -21,6 +21,6 @@ export class CreateTransactionRepository
 			orm_transaction
 		);
 
-		return modelToDomain(saved_transaction);
+		return TransactionMapper.modelToDomain(saved_transaction);
 	}
 }

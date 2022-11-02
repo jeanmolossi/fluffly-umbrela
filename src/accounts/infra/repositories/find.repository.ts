@@ -5,7 +5,7 @@ import { Account, Accounts } from '@/accounts/domain';
 import { BaseFilters } from '@/shared/infra/repositories/base.filters';
 import { BaseRepository } from '@/shared/infra/repositories/base.repository';
 import { AccountModel } from './account.entity';
-import { arrayModelToDomain } from './account.mapper';
+import { AccountMapper } from './account.mapper';
 
 @Injectable()
 export class FindAccountRepository
@@ -33,6 +33,6 @@ export class FindAccountRepository
 			}
 		});
 
-		return { accounts: arrayModelToDomain(accounts), total };
+		return { accounts: AccountMapper.arrayModelToDomain(accounts), total };
 	}
 }

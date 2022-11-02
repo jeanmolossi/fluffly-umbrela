@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Payment, PaymentMethod } from '@/payments/domain';
-import { modelToDomain } from './payment.mapper';
+import { PaymentMapper } from './payment.mapper';
 import { PaymentModel } from './payments.entity';
 
 @Injectable()
@@ -17,6 +17,6 @@ export class FindOneWalletRepository implements Payment.FindOneRepository {
 
 		if (!payment) return null;
 
-		return modelToDomain(payment);
+		return PaymentMapper.modelToDomain(payment);
 	}
 }

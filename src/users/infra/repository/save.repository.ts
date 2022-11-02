@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { InternalServerErr, NotFoundErr } from '@/shared/domain/http-errors';
 import { User, Users } from '@/users/domain';
 import { UserModel } from './user.entity';
-import { modelToDomain } from './user.mapper';
+import { UserMapper } from './user.mapper';
 
 @Injectable()
 export class SaveRepository implements Users.SaveRepository {
@@ -18,7 +18,7 @@ export class SaveRepository implements Users.SaveRepository {
 
 		if (!user) throw new NotFoundErr('User not found');
 
-		const updated_user = updateCb(modelToDomain(user));
+		const updated_user = updateCb(UserMapper.modelToDomain(user));
 
 		const updated_user_model = this.usersRepository.create(updated_user);
 		const { affected } = await this.usersRepository.update(

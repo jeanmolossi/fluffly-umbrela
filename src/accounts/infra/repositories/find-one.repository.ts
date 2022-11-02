@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Account, Accounts } from '@/accounts/domain';
 import { AccountModel } from './account.entity';
-import { modelToDomain } from './account.mapper';
+import { AccountMapper } from './account.mapper';
 
 @Injectable()
 export class FindOneAccountRepository implements Accounts.FindOneRepository {
@@ -17,6 +17,6 @@ export class FindOneAccountRepository implements Accounts.FindOneRepository {
 
 		if (!account_found) return null;
 
-		return modelToDomain(account_found);
+		return AccountMapper.modelToDomain(account_found);
 	}
 }
