@@ -1,0 +1,43 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - uses: actions/checkout@main
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@main
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: install Tzdata
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y apt-utils locales tzdata
+          echo "America/Sao_Paulo" | sudo tee /etc/timezone && sudo ln -fs /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime && sudo dpkg-reconfigure -f noninteractive tzdata
+      - name: install
+        run: NPM_TOKEN=${{secrets.NPM_TOKEN}} yarn install
+      - name: lint
+        run: NPM_TOKEN=${{secrets.NPM_TOKEN}} yarn lint
+      - name: unit
+        run: NPM_TOKEN=${{secrets.NPM_TOKEN}} yarn test --forceExit
+      - name: build
+        run: NPM_TOKEN=${{secrets.NPM_TOKEN}} yarn build
+      - name: integration
+        run: NPM_TOKEN=${{secrets.NPM_TOKEN}} yarn cypress:ci
+
+  njsscan:
+    runs-on: ubuntu-latest
+    name: njsscan check
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v2
+      - name: nodejsscan scan
+        id: njsscan
+        uses: ajinabraham/njsscan-action@master
+        with:
+          args: '.'
