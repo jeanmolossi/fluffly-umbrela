@@ -15,9 +15,9 @@ async function bootstrap() {
 	});
 
 	app.enableCors({
-		origin: ['http://localhost'],
+		origin: ['http://localhost', 'http://localhost:3000'],
 		credentials: true,
-		allowedHeaders: ['x-timestamp', 'x-hash']
+		allowedHeaders: ['x-timestamp', 'x-hash', 'authorization']
 	});
 	app.use(helmet());
 	app.use(cookieParser());
