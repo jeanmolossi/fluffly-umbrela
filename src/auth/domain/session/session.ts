@@ -43,6 +43,11 @@ export class Session {
 	}
 
 	static extractInfo(basic_token: string): Sessions.Info {
+		// removes basic prefix when it presents and trim whitespaces
+		basic_token = basic_token.replace(/^basic\s/i, '').trim();
+		// decode URI components from token
+		basic_token = decodeURIComponent(basic_token);
+		// decode base64 to ascii readable token
 		const decoded = Buffer.from(basic_token, 'base64').toString('ascii');
 
 		const [user_id, session_id] = decoded.split(':');

@@ -39,6 +39,7 @@ export class AuthController {
 	}
 
 	@Post('logout')
+	@UseGuards(JwtAuthGuard)
 	@ApiBasicAuth(constants.AUTH_TOKEN)
 	async logout(
 		@Request() request: eRequest,
