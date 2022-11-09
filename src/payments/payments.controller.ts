@@ -11,12 +11,11 @@ import { ApiBasicAuth, ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Response as eResponse } from 'express';
 import { JwtAuthGuard } from '@/auth/infra/guards/jwt-auth.guard';
 import { HttpStatus } from '@/shared/domain/http-status';
-import { Pagination } from '@/shared/infra/adapters/pagination';
 import { AuthUser } from '@/shared/infra/decorators/user.decorator';
 import constants from '@/shared/shared.constants';
 import { User } from '@/users/domain';
-import { Payment } from './domain';
 import { AddWallet } from './infra/adapters/add-wallet';
+import { WalletFilters } from './infra/adapters/wallet-filters';
 import { PaymentListDTO } from './infra/dto/payment-list.dto';
 import { CreateWalletService } from './infra/services/create.service';
 import { FindMyWalletsService } from './infra/services/find.service';
@@ -49,7 +48,7 @@ export class PaymentsController {
 	async getMyPayments(
 		@AuthUser() user: User,
 		@Response() response: eResponse,
-		@Query() filters: Pagination<Payment.Model, Payment.Relations>
+		@Query() filters: WalletFilters
 	) {
 		const result = await this.find.run(user, filters);
 

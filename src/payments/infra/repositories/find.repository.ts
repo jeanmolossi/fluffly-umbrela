@@ -24,6 +24,7 @@ export class FindWalletRepository
 		filters: BaseFilters<Payment.Model, Payment.Relations>
 	): Promise<{ payments: PaymentMethod[]; total: number }> {
 		const where = this.options<PaymentModel>(filter, filters);
+
 		const [payments, total] = await this.paymentsRepository.findAndCount({
 			...where,
 			cache: {

@@ -30,6 +30,10 @@ export namespace Payment {
 		updated_at?: Date;
 	}
 
+	export interface Filters extends BaseFilters<Model, Relations> {
+		account?: string;
+	}
+
 	export interface CreateRepository {
 		run(payment: PaymentMethod): Promise<PaymentMethod>;
 	}
