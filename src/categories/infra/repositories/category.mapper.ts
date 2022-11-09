@@ -21,8 +21,8 @@ export class CategoryMapper {
 		return new Category({
 			id,
 			user: UserMapper.modelToDomain(user),
-			parent: this.modelToDomain(parent),
-			sub_categories: this.arrayModelToDomain(sub_categories),
+			parent: CategoryMapper.modelToDomain(parent),
+			sub_categories: CategoryMapper.arrayModelToDomain(sub_categories),
 			name,
 			transactions: TransactionMapper.arrayModelToDomain(transactions),
 			created_at,
