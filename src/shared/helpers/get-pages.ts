@@ -81,7 +81,16 @@ function build_additional_query<T extends object, M>(
 	const keys_to_ignore = ['total', 'page', 'per_page'];
 	const flat_map = ([key, value]) => {
 		if (keys_to_ignore.includes(key)) return [];
+
+		if (key === 'sort') value = objectToQuery(value);
+
 		return [`${key}=${encodeURIComponent(value)}`];
 	};
 	return Object.entries(filters).flatMap(flat_map).join('&');
+}
+
+function objectToQuery(obj: object): string {
+	return Object.entries(obj)
+		.map(([key, value]) => `${key},${value}`)
+		.join('&');
 }
