@@ -1,6 +1,12 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
-import { IsEnum, IsNotEmpty, IsNumber, IsUUID } from 'class-validator';
+import {
+	IsEnum,
+	IsNotEmpty,
+	IsNumber,
+	IsOptional,
+	IsUUID
+} from 'class-validator';
 import { Payment } from '@/payments/domain';
 
 export class AddWallet {
@@ -26,19 +32,19 @@ export class AddWallet {
 	})
 	type: Payment.Type;
 
-	@ApiProperty({
+	@ApiPropertyOptional({
 		example: 1131034,
 		description: 'Limit example value represents R$ 11.310,34'
 	})
-	@IsNotEmpty({ message: 'Name should not be empty' })
 	@IsNumber(
 		{ allowInfinity: false, allowNaN: false, maxDecimalPlaces: 0 },
 		{ message: 'Limit should be a integer value (in cents)' }
 	)
+	@IsOptional()
 	limit: number;
 
-	@ApiProperty({ example: Payment.Brand.ELO })
-	@IsNotEmpty({ message: 'Name should not be empty' })
+	@ApiPropertyOptional({ example: Payment.Brand.ELO })
 	@IsEnum(Payment.Brand, { message: 'Brand should be valid' })
-	brand: Payment.Brand;
+	@IsOptional()
+	brand: Payment.Brand = null;
 }
