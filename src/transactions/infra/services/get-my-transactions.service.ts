@@ -46,8 +46,14 @@ export class GetMyTransactionsService {
 		}
 
 		if (account_id) {
-			const account = { wallet: { account: { id: account_id } } };
-			Object.assign(where, where.wallet?.id ? account : {});
+			const account = {
+				wallet: {
+					id: where.wallet?.id,
+					account: { id: account_id }
+				}
+			};
+
+			Object.assign(where, account);
 		}
 
 		if (category_id) {
