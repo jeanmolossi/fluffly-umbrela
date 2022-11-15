@@ -1,5 +1,6 @@
 import {
 	ArgumentsHost,
+	BadRequestException,
 	Catch,
 	ExceptionFilter,
 	HttpStatus
@@ -19,6 +20,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
 		if (process.env.NODE_ENV === 'development') {
 			console.log(exception.stack);
+		}
+
+		if (exception instanceof BadRequestException) {
+			return response.status(status).json(exception.getResponse());
 		}
 
 		return response.status(status).json({
