@@ -16,10 +16,6 @@ export abstract class PaymentMethod extends Entity {
 
 		super(_props.id);
 
-		// Initialize all optional props
-		_props.type = _props.type ?? Payment.Type.CASH;
-		_props.limit = _props.limit ?? null;
-		_props.brand = _props.brand ?? null;
 		_props.created_at = _props.created_at ?? new Date();
 		_props.updated_at = _props.updated_at ?? new Date();
 	}
@@ -53,7 +49,7 @@ export abstract class PaymentMethod extends Entity {
 	}
 
 	get readable_limit(): string {
-		if (!this._props.limit) return null;
+		if (!this._props.limit) return;
 
 		// parse cents to brl
 		const to_brl = this._props.limit / 100;
@@ -90,10 +86,6 @@ export class CashMethod extends PaymentMethod {
 	 * @param {Payment.Model} _props the options to create a payment method
 	 */
 	constructor(_props: Payment.Model = {} as Payment.Model) {
-		_props.type = _props.type ?? Payment.Type.CASH;
-		_props.limit = null;
-		_props.brand = null;
-
 		super(_props);
 	}
 
@@ -110,9 +102,6 @@ export class CreditCard extends PaymentMethod {
 	 * @param {Payment.Model} _props the options to create a payment method
 	 */
 	constructor(_props: Payment.Model = {} as Payment.Model) {
-		// Credit card ever will have CREDIT type
-		_props.type = Payment.Type.CREDIT;
-
 		super(_props);
 	}
 
@@ -129,10 +118,6 @@ export class DebitCard extends PaymentMethod {
 	 * @param {Payment.Model} _props the options to create a payment method
 	 */
 	constructor(_props: Payment.Model = {} as Payment.Model) {
-		// Debit card ever will has type DEBIT and no limit
-		_props.type = Payment.Type.DEBIT;
-		_props.limit = null;
-
 		super(_props);
 	}
 
