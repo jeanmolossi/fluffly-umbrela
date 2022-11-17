@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Exclude } from 'class-transformer';
+import { Exclude, Type } from 'class-transformer';
 import {
 	IsEnum,
 	IsNotEmpty,
@@ -41,6 +41,7 @@ export class AddWallet {
 		{ message: 'Limit should be a integer value (in cents)' }
 	)
 	@IsOptional()
+	@Type(() => Number)
 	limit: number;
 
 	@ApiPropertyOptional({ example: Payment.Brand.ELO })
