@@ -30,10 +30,11 @@ export class TransactionAddedListener {
 		const account = accounts?.[0];
 
 		if (!account) throw new NotFoundErr('Invalid user account');
+
 		if (account.wallets.length === 0)
 			throw new NotFoundErr('No wallets found in this account');
 
-		const wallet = this.get_wallet(wallet_id).on(account.wallets);
+		const wallet = this.get_wallet(wallet_id).on(accounts);
 
 		if (!wallet) throw new NotFoundErr('Invalid wallet provided');
 
@@ -59,7 +60,17 @@ export class TransactionAddedListener {
 
 	private get_wallet(wallet_id: string) {
 		return {
-			on(wallets: PaymentMethod[]): PaymentMethod {
+			on(accounts: Account[]): PaymentMethod {
+				const wallets = accounts.reduce<PaymentMethod[]>(
+					(acc, account) => {
+						if (account.wallets.length > 0)
+							acc.push(...account.wallets);
+
+						return acc;
+					},
+					[]
+				);
+
 				return wallets.find(w => w.id === wallet_id);
 			}
 		};
