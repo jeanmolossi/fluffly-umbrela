@@ -5,6 +5,7 @@ import {
 	LessThanOrEqual,
 	MoreThanOrEqual
 } from 'typeorm';
+import { mapObject } from '@/shared/helpers/map-relation';
 import { BaseFilters } from './base.filters';
 
 type DateCondition = {
@@ -46,13 +47,29 @@ export abstract class BaseRepository {
 		return (page - 1) * per_page;
 	}
 
-	protected getSelect<T extends { id: string }>(fields: (keyof T)[]): any[] {
+	protected getSelect<T extends { id: string }>(fields: (keyof T)[]): any {
 		if (fields?.length > 0) {
 			// id should be ever selected
-			return ['id', ...(fields as any)];
+			const fields_to_select = [...new Set(['id', ...(fields as any)])];
+
+			return this.map_fields(fields_to_select);
 		}
 
 		return undefined;
+	}
+
+	private map_fields(fields: string[]) {
+		const select = {};
+
+		fields.forEach(field => {
+			if (field.match(/\./g)) {
+				mapObject(select, field);
+			} else {
+				Object.assign(select, { [field]: true });
+			}
+		});
+
+		return select;
 	}
 
 	protected getDateConditions(start_date?: Date, end_date?: Date) {
