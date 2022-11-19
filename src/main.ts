@@ -15,7 +15,11 @@ async function bootstrap() {
 	});
 
 	app.enableCors({
-		origin: ['http://localhost', 'http://localhost:3000'],
+		origin: [
+			'http://localhost',
+			'http://localhost:3000',
+			'http://192.168.100.11'
+		],
 		credentials: true,
 		allowedHeaders: ['x-timestamp', 'x-hash', 'authorization']
 	});
