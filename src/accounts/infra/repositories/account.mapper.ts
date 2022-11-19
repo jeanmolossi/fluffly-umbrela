@@ -37,4 +37,18 @@ export class AccountMapper {
 	static arrayModelToDomain(accounts: AccountModel[]): Account[] {
 		return accounts?.map(this.modelToDomain);
 	}
+
+	static domainToModel(account: Account): AccountModel {
+		const to_props: AccountModel = {
+			id: account.id,
+			name: account.name,
+			bank_id: account.bank_id,
+			bank_name: account.bank_name,
+			initial_amount: account.initial_amount,
+			current_amount: account.current_amount,
+			user: account.user
+		};
+
+		return Object.assign(new AccountModel(), to_props);
+	}
 }

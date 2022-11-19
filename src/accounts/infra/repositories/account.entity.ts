@@ -19,7 +19,7 @@ export class AccountModel {
 	user?: UserModel;
 
 	@OneToMany(() => PaymentModel, w => w.account)
-	wallets: PaymentModel[];
+	wallets?: PaymentModel[];
 
 	@Column()
 	name: string;
