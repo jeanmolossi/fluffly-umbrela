@@ -38,4 +38,16 @@ export class UserMapper {
 	static arrayModelToDomain(users: UserModel[]): User[] {
 		return users?.map(this.modelToDomain);
 	}
+
+	static domainToModel(user: User): UserModel {
+		const to_props: UserModel = {
+			id: user.id,
+			name: user.name,
+			email: user.email,
+			password: user.password,
+			avatar: user.avatar
+		};
+
+		return Object.assign(new UserModel(), to_props);
+	}
 }
