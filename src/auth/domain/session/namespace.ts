@@ -22,7 +22,7 @@ export namespace Sessions {
 	}
 
 	export interface DeleteRepository {
-		run(session_id: string): Promise<boolean>;
+		run(info: Info): Promise<boolean>;
 	}
 
 	export type Updater = (session: Session) => Session;
