@@ -1,3 +1,5 @@
+import { PaymentModel } from '@/payments/infra/repositories/payments.entity';
+import { UserModel } from '@/users/infra/repository/user.entity';
 import {
 	Column,
 	CreateDateColumn,
@@ -7,8 +9,6 @@ import {
 	PrimaryGeneratedColumn,
 	UpdateDateColumn
 } from 'typeorm';
-import { PaymentModel } from '@/payments/infra/repositories/payments.entity';
-import { UserModel } from '@/users/infra/repository/user.entity';
 
 @Entity({ name: 'accounts' })
 export class AccountModel {
@@ -18,7 +18,7 @@ export class AccountModel {
 	@ManyToOne(() => UserModel, u => u.accounts)
 	user?: UserModel;
 
-	@OneToMany(() => PaymentModel, w => w.account)
+	@OneToMany(() => PaymentModel, w => w.account, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
 	wallets?: PaymentModel[];
 
 	@Column()

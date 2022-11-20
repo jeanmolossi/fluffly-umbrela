@@ -28,4 +28,18 @@ export class PaymentMapper {
 	static arrayModelToDomain(payments: PaymentModel[]): PaymentMethod[] {
 		return payments?.map(this.modelToDomain);
 	}
+
+	static domainToModel(payment: PaymentMethod): PaymentModel {
+		const to_props: PaymentModel = {
+			id: payment.id,
+			name: payment.name,
+			brand: payment.brand,
+			limit: payment.limit,
+			type: payment.type,
+			user: payment.user,
+			account: payment.account as any
+		};
+
+		return Object.assign(new PaymentModel(), to_props);
+	}
 }

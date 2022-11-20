@@ -1,11 +1,11 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { OnEvent } from '@nestjs/event-emitter';
 import { Account, Accounts } from '@/accounts/domain';
 import { PaymentMethod } from '@/payments/domain';
 import { NotFoundErr } from '@/shared/domain/http-errors';
 import { Transaction } from '@/transactions/domain';
 import { TransactionAddedEvent } from '@/transactions/infra/events/transaction-added.event';
 import { User } from '@/users/domain';
+import { Inject, Injectable } from '@nestjs/common';
+import { OnEvent } from '@nestjs/event-emitter';
 import { FindAccountRepository } from '../repositories/find.repository';
 import { UpdateAccountRepository } from '../repositories/update.repository';
 
@@ -23,22 +23,24 @@ export class TransactionAddedListener {
 		const { user_id, wallet_id } = event;
 
 		const { accounts } = await this.findAccounts.run(
-			{ user: { id: user_id } as User },
-			{ relations: ['wallets'] }
+			{
+				user: { id: user_id } as User,
+				wallets: { id: wallet_id } as any,
+			},
+			// @ts-ignore
+			{ relations: ['wallets', 'wallets.account'] }
 		);
-
-		const account = accounts?.[0];
-
-		if (!account) throw new NotFoundErr('Invalid user account');
-
-		if (account.wallets.length === 0)
-			throw new NotFoundErr('No wallets found in this account');
 
 		const wallet = this.get_wallet(wallet_id).on(accounts);
 
 		if (!wallet) throw new NotFoundErr('Invalid wallet provided');
 
-		await this.updateAccount.run(account.id, this.update(event));
+		const { account } = wallet
+
+		if (!account)
+			throw new NotFoundErr('No account for this wallet')
+
+		await this.updateAccount.run(wallet.account.id, this.update(event));
 	}
 
 	private update(event: TransactionAddedEvent): Accounts.Updater {

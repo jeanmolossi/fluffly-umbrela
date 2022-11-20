@@ -24,7 +24,15 @@ export function TypeOrmModuleFactory(): DynamicModule {
 				__dirname + '/**/infra/repositories/*.entity.{ts,js}'
 			],
 			synchronize: config.get('NODE_ENV') === 'development',
-			logging: ['schema', 'error']
+			logging: ['schema', 'error'],
+			seeds: [
+				__dirname + '/**/infra/repository/*.seed.{ts,js}',
+				__dirname + '/**/infra/repositories/*.seed.{ts,js}'
+			],
+			factories: [
+				__dirname + '/**/infra/repository/*.factory.{ts,js}',
+				__dirname + '/**/infra/repositories/*.factory.{ts,js}'
+			]
 		} as TypeOrmModuleOptions);
 
 	return TypeOrmModule.forRootAsync({

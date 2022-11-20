@@ -4,6 +4,22 @@ import { Entity } from '@/shared/domain/entity';
 import { User } from '@/users/domain';
 import { Payment } from './namespace';
 
+export class PaymentFactory {
+	static make(payment: Payment.Model): PaymentMethod {
+		const { type = Payment.Type.CASH } = payment;
+
+		const type_based = {
+			[Payment.Type.CASH]: CashMethod,
+			[Payment.Type.CREDIT]: CreditCard,
+			[Payment.Type.DEBIT]: DebitCard
+		} as const;
+
+		const { account, user, ...rest } = payment;
+
+		return new type_based[type]().factory({ ...rest, user, account });
+	}
+}
+
 export abstract class PaymentMethod extends Entity {
 	/**
 	 * PaymentMethod is the base payment method model
@@ -11,7 +27,9 @@ export abstract class PaymentMethod extends Entity {
 	 * Use that class to create a new payment method
 	 * @param {Payment.Model} _props the options to create a payment method
 	 */
-	constructor(private readonly _props: Payment.Model = {} as Payment.Model) {
+	constructor(
+		protected readonly _props: Payment.Model = {} as Payment.Model
+	) {
 		_props.id = _props.id ?? randomUUID();
 
 		super(_props.id);

@@ -24,6 +24,7 @@ async function bootstrap() {
 		allowedHeaders: ['x-timestamp', 'x-hash', 'authorization']
 	});
 	app.use(helmet());
+	//@ts-ignore
 	app.use(cookieParser());
 
 	app.useGlobalPipes(new ValidationPipe({ transform: true }));
