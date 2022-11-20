@@ -1,14 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Inject, Injectable } from '@nestjs/common';
 import { Session, Sessions } from '@/auth/domain';
-import { SessionModel } from './session.entity';
+import { DynamoDBRepositoryAdapter } from './dynamo-adapter/dynamo-adapter.repository';
 
 @Injectable()
 export class FindOneSessionRepository implements Sessions.FindOneRepository {
 	constructor(
-		@InjectRepository(SessionModel)
-		private readonly sessionRepository: Repository<SessionModel>
+		@Inject(DynamoDBRepositoryAdapter)
+		private readonly sessionRepository: DynamoDBRepositoryAdapter
 	) {}
 
 	async run(session: Partial<Sessions.Model>): Promise<Session> {
