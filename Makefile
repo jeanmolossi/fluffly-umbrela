@@ -11,17 +11,19 @@ usage:
 
 .PHONY: run
 run:
-	@echo "$(OK_COLOR)==> Generating env file...$(NO_COLOR)"
+	@mkdir -p .docker/sessiondbdata/
+	@chmod 777 .docker/sessiondbdata/
+	@echo -e "$(OK_COLOR)==> Generating env file...$(NO_COLOR)"
 	@./scripts/gen-envs
-	@echo "$(OK_COLOR)==> Starting application...$(NO_COLOR)"
+	@echo -e "$(OK_COLOR)==> Starting application...$(NO_COLOR)"
 	docker-compose up -d
 
 .PHONY: stop
 stop:
-	@echo "$(WARN_COLOR)==> Stoping application. Wait until end...$(NO_COLOR)"
+	@echo -e "$(WARN_COLOR)==> Stoping application. Wait until end...$(NO_COLOR)"
 	docker-compose down
 
 .PHONY: logs
 logs:
-	@echo "$(OK_COLOR)==> Connecting to container...$(NO_COLOR)"
+	@echo -e "$(OK_COLOR)==> Connecting to container...$(NO_COLOR)"
 	docker logs -f fluffly_umbrela_api -n 30

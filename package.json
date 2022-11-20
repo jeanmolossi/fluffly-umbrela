@@ -23,6 +23,8 @@
     "seed": "ts-node -r tsconfig-paths/register src/shared/shared.seed.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.214.0",
+    "@aws-sdk/lib-dynamodb": "^3.214.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^9.0.0",

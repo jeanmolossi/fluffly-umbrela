@@ -33,6 +33,18 @@ services:
         networks:
             - api-net
 
+    fluffly_umbrela_dynamo:
+        container_name: fluffly_umbrela_dynamo
+        image: amazon/dynamodb-local:1.20.0
+        command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data/"
+        # restart: always
+        ports:
+            - "8000:8000"
+        volumes:
+            - .docker/sessiondbdata:/home/dynamodblocal/data
+        working_dir: /home/dynamodblocal
+        networks:
+            - api-net
 networks:
     api-net:
         driver: bridge
