@@ -5,6 +5,7 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+  "main": "./src/main.ts",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
@@ -18,7 +19,8 @@
     "test:watch": "jest --maxWorkers=30% --watchAll",
     "test:cov": "jest --maxWorkers=50% --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "seed": "ts-node -r tsconfig-paths/register src/shared/shared.seed.ts"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
@@ -79,6 +81,7 @@
     "ts-loader": "^9.2.3",
     "ts-node": "^10.0.0",
     "tsconfig-paths": "4.1.0",
+    "typeorm-extension": "^2.2.13",
     "typescript": "^4.7.4"
   },
   "jest": {
