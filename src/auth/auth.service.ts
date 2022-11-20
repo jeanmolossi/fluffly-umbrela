@@ -35,7 +35,7 @@ export class AuthService {
 
 		const user = await this.findOneUser.run({ email });
 
-		if (!user.isValidPassword(credentials.password)) {
+		if (!user?.isValidPassword(credentials.password)) {
 			throw new UnauthorizedErr('Invalid credentials');
 		}
 
@@ -53,7 +53,11 @@ export class AuthService {
 			);
 
 			if (isset_session.isExpired()) {
-				if (!(await this.deleteSession.run(isset_session.id)))
+				const session_deleted = await this.deleteSession.run({
+					session_id: isset_session.id,
+					user_id: isset_session.user_id
+				});
+				if (!session_deleted)
 					throw new InternalServerErr('Can not login, try again');
 			}
 		}
@@ -83,7 +87,12 @@ export class AuthService {
 		const decoder = this.jwtService.verify.bind(this.jwtService);
 
 		if (!session || session.attachDecoder(decoder).isExpired()) {
-			if (session) await this.deleteSession.run(session.id);
+			if (session)
+				await this.deleteSession.run({
+					session_id: session.id,
+					user_id: session.user_id
+				});
+
 			throw new UnauthorizedErr('Unauthorized');
 		}
 
@@ -95,9 +104,9 @@ export class AuthService {
 	async logout(basic_token: string) {
 		if (!basic_token) return {};
 
-		const { session_id } = Session.extractInfo(basic_token);
+		const { session_id, user_id } = Session.extractInfo(basic_token);
 
-		await this.deleteSession.run(session_id);
+		await this.deleteSession.run({ session_id, user_id });
 
 		return {};
 	}
