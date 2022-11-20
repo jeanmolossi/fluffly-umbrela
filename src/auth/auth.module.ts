@@ -8,6 +8,8 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { CreateSessionRepository } from './infra/repository/create.repository';
 import { DeleteSessionRepository } from './infra/repository/delete.repository';
+import { DynamoDBRepositoryAdapter } from './infra/repository/dynamo-adapter/dynamo-adapter.repository';
+import { DynamoDBRepository } from './infra/repository/dynamo-adapter/dynamodb.repository';
 import { FindOneSessionRepository } from './infra/repository/find-one.repository';
 import { SessionModel } from './infra/repository/session.entity';
 import { JwtStrategy } from './infra/strategies/jwt.strategy';
@@ -22,6 +24,9 @@ import { LocalStrategy } from './infra/strategies/local.strategy';
 	],
 	controllers: [AuthController],
 	providers: [
+		// Adapters
+		DynamoDBRepository,
+		DynamoDBRepositoryAdapter,
 		// Repositories
 		CreateSessionRepository,
 		FindOneSessionRepository,
