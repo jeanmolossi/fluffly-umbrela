@@ -2,6 +2,7 @@ import { Request } from 'express';
 import { Strategy } from 'passport-strategy';
 import { User } from '@/users/domain';
 
+export type Tokens = { basic: string; refresh: string };
 type Extractor = (request: Request) => string;
 
 interface Options {
@@ -16,7 +17,7 @@ export class JwtStrategyBase extends Strategy {
 	constructor(
 		private readonly options: Options,
 		private readonly _verify: (
-			basic: string,
+			tokens: Tokens,
 			done: (t: any) => any
 		) => Promise<User>
 	) {
@@ -25,9 +26,21 @@ export class JwtStrategyBase extends Strategy {
 
 	async authenticate(request: Request, _options?: any) {
 		const self = this;
-		const token = this.options.jwtFromRequest(request);
+		const request_tokens = this.options.jwtFromRequest(request);
 
-		if (!token) return this.fail(new Error('No auth token'), 401);
+		const token_array = request_tokens?.split('___');
+		if (token_array.length === 0)
+			return this.fail(new Error(`No auth tokens`), 401);
+
+		const [basic, refresh] = token_array;
+
+		if (!basic && !refresh)
+			return this.fail(new Error(`No auth tokens`), 401);
+
+		const tokens = { basic, refresh };
+
+		if (!tokens.basic && !tokens.refresh)
+			return this.fail(new Error('No auth token'), 401);
 
 		try {
 			const done = (user: User, info?: any) => {
@@ -35,7 +48,7 @@ export class JwtStrategyBase extends Strategy {
 				self.success(user, info);
 			};
 
-			await this._verify(token, done);
+			await this._verify(tokens, done);
 		} catch (e) {
 			console.log('fail', e.message);
 			return self.fail(e, e.status);

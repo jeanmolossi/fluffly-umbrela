@@ -1,4 +1,4 @@
-import { addMinutes } from './date-math';
+import { addMilliseconds, addMinutes, parseToMs, time_ref } from './date-math';
 
 jest.useFakeTimers().setSystemTime(new Date('2022-01-01'));
 
@@ -63,5 +63,28 @@ describe('Helpers > Date Math', function () {
 
 			expect(test_date.toISOString()).toBe(want_after_add);
 		}
+	});
+
+	test('should add milliseconds properly', function () {
+		const test_date = new Date();
+
+		expect(test_date.toISOString()).toBe('2022-01-01T00:00:00.000Z');
+		addMilliseconds(test_date, 500);
+		expect(test_date.toISOString()).toBe('2022-01-01T00:00:00.500Z');
+	});
+});
+
+describe('Helpers > parseToMs', function () {
+	test('should parse dates to correct ms time', function () {
+		const test_cases: Record<any, any> = [
+			{ time_str: '15s', expected: time_ref['s'] * 15 },
+			{ time_str: '20m', expected: time_ref['m'] * 20 },
+			{ time_str: '25h', expected: time_ref['h'] * 25 },
+			{ time_str: '30d', expected: time_ref['d'] * 30 }
+		];
+
+		test_cases.forEach(({ time_str, expected }) => {
+			expect(parseToMs(time_str)).toBe(expected);
+		});
 	});
 });

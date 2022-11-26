@@ -45,8 +45,8 @@ export function TypeOrmModuleFactory(): DynamicModule {
 export function JwtModuleFactory(): DynamicModule {
 	const use_factory = (config: ConfigService) =>
 		Promise.resolve({
-			secret: config.get('ACCESS_TOKEN_SECRET'),
-			signOptions: { expiresIn: config.get('ACCESS_TOKEN_EXPIRES') }
+			secret: config.get('REFRESH_TOKEN_SECRET'),
+			signOptions: { expiresIn: config.get('REFRESH_TOKEN_EXPIRES') }
 		} as JwtModuleOptions);
 
 	return JwtModule.registerAsync({

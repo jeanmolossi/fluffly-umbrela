@@ -14,14 +14,13 @@ export class FindOneSessionRepository implements Sessions.FindOneRepository {
 
 		if (!isset_session) return null;
 
-		const { user_id, session_id, session_token, refresh_token } =
-			isset_session;
+		const { user_id, id, token, created_at } = isset_session;
 
 		return new Session({
+			id,
 			user_id,
-			session_id,
-			session_token,
-			refresh_token
+			token,
+			created_at
 		});
 	}
 }

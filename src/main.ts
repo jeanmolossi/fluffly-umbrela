@@ -14,18 +14,24 @@ async function bootstrap() {
 		bufferLogs: true
 	});
 
+	// @ts-ignore
+	app.use(cookieParser());
 	app.enableCors({
 		origin: [
 			'http://localhost',
 			'http://localhost:3000',
-			'http://192.168.100.11'
+			'http://192.168.100.11',
+			'http://192.168.100.11:3000'
 		],
 		credentials: true,
-		allowedHeaders: ['x-timestamp', 'x-hash', 'authorization']
+		allowedHeaders: [
+			'x-timestamp',
+			'x-hash',
+			'authorization',
+			'x-refresh-token'
+		]
 	});
 	app.use(helmet());
-	//@ts-ignore
-	app.use(cookieParser());
 
 	app.useGlobalPipes(new ValidationPipe({ transform: true }));
 	app.useGlobalFilters(new HttpExceptionFilter());

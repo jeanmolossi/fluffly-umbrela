@@ -15,39 +15,43 @@ export class CreateSessionRepository implements Sessions.CreateRepository {
 			session.id
 		);
 
-		if (isset_session) return isset_session;
+		if (isset_session) {
+			isset_session.refresh = isset_session.refresh ?? session.refresh;
+			return isset_session;
+		}
 
-		const { user_id, session_id, session_token, refresh_token } =
+		const { user_id, id, token, created_at } =
 			await this.sessionRepository.create({
+				id: session.id,
 				user_id: session.user_id,
-				session_id: session.id,
-				refresh_token: session.refresh_token,
-				session_token: session.session_token
+				token: session.token,
+				created_at: session.created_at
 			});
 
 		return new Session({
+			id,
 			user_id,
-			session_id,
-			session_token,
-			refresh_token
+			token,
+			created_at,
+			refresh: session?.refresh
 		});
 	}
 
 	async sessionAlreadyExists(user_id: string, session_id: string) {
 		const result = await this.sessionRepository.findOneBy({
-			user_id,
-			session_id
+			id: session_id,
+			user_id
 		});
 
 		if (!result) return null;
 
-		const { session_token, refresh_token } = result;
+		const { token, created_at } = result;
 
 		return new Session({
 			user_id,
-			session_id,
-			session_token,
-			refresh_token
+			id: session_id,
+			token,
+			created_at
 		});
 	}
 }

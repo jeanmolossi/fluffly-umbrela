@@ -4,15 +4,15 @@ import { UserModel } from '@/users/infra/repository/user.entity';
 @Entity({ name: 'session' })
 export class SessionModel {
 	@PrimaryGeneratedColumn('uuid')
-	session_id: string;
+	id: string;
 
 	@OneToOne(() => UserModel)
 	@Column()
 	user_id: string;
 
 	@Column({ nullable: false })
-	session_token: string;
+	token: string;
 
 	@Column({ nullable: false })
-	refresh_token: string;
+	created_at: number;
 }

@@ -27,10 +27,9 @@ export class DynamoDBRepositoryAdapter {
 		const input: PutCommandInput = {
 			Item: {
 				UserID: session.user_id,
-				ID: session.session_id,
-				SessionToken: session.session_token,
-				RefreshToken: session.refresh_token,
-				CreatedAt: new Date().getTime()
+				ID: session.id,
+				Token: session.token,
+				CreatedAt: session.created_at
 			},
 			TableName: table_name
 		};
@@ -64,7 +63,7 @@ export class DynamoDBRepositoryAdapter {
 		const input: DeleteCommandInput = {
 			TableName: table_name,
 			Key: {
-				ID: session.session_id,
+				ID: session.id,
 				UserID: session.user_id
 			}
 		};
@@ -87,7 +86,7 @@ export class DynamoDBRepositoryAdapter {
 		const input: GetCommandInput = {
 			Key: {
 				UserID: session.user_id,
-				ID: session.session_id
+				ID: session.id
 			},
 			TableName: table_name
 		};
@@ -102,10 +101,10 @@ export class DynamoDBRepositoryAdapter {
 
 		const sessionModel = new SessionModel();
 
-		sessionModel.session_id = Item.ID;
+		sessionModel.id = Item.ID;
 		sessionModel.user_id = Item.UserID;
-		sessionModel.session_token = Item.SessionToken;
-		sessionModel.refresh_token = Item.RefreshToken;
+		sessionModel.token = Item.Token;
+		sessionModel.created_at = Item.CreatedAt;
 
 		return sessionModel;
 	}
@@ -113,7 +112,7 @@ export class DynamoDBRepositoryAdapter {
 	private has_partition_keys(session: Partial<SessionModel>): boolean {
 		if (
 			!hasOwnProperty(session, 'user_id') ||
-			!hasOwnProperty(session, 'session_id')
+			!hasOwnProperty(session, 'id')
 		) {
 			return false;
 		}

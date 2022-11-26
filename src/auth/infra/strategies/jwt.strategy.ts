@@ -20,23 +20,37 @@ export class JwtStrategy extends PassportStrategy(JwtStrategyBase) {
 					JwtStrategy.fromBasicHeader
 				]),
 				ignoreExpiration: false,
-				secretOrKey: config.get('ACCESS_TOKEN_SECRET')
+				secretOrKey: config.get('REFRESH_TOKEN_SECRET')
 			},
 			authService.validateSession.bind(authService)
 		);
 	}
 
 	private static fromCookies(request: Request) {
-		return request.cookies[constants.AUTH_TOKEN];
+		const auth_token = request.cookies[constants.AUTH_TOKEN];
+		const refresh_token = request.cookies[constants.REFRESH_TOKEN];
+
+		if (!auth_token && !refresh_token) return ``;
+
+		return `${auth_token}___${refresh_token}`;
 	}
 
 	private static fromBasicHeader(request: Request): string {
+		let basic: string;
+		let refresh: string;
+
 		if (request.headers?.authorization) {
-			return decodeURIComponent(
+			basic = decodeURIComponent(
 				request.headers?.authorization?.replace(/basic\s/gi, '')
 			);
 		}
 
-		return '';
+		if (request.headers?.['x-refresh-token']) {
+			refresh = request.headers?.['x-refresh-token'] as string;
+		}
+
+		if (!basic && !refresh) return ``;
+
+		return `${basic}___${refresh}`;
 	}
 }

@@ -6,8 +6,9 @@ import {
 	Response,
 	UseGuards
 } from '@nestjs/common';
-import { ApiBasicAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBasicAuth, ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Request as eRequest, Response as eResponse } from 'express';
+import { UnauthorizedErr } from '@/shared/domain/http-errors';
 import { HttpStatus } from '@/shared/domain/http-status';
 import { addMinutes } from '@/shared/helpers/date-math';
 import { AuthUser } from '@/shared/infra/decorators/user.decorator';
@@ -30,10 +31,50 @@ export class AuthController {
 		const user = request.user as User;
 		const session = await this.authService.login(user);
 
-		response.cookie(constants.AUTH_TOKEN, session.oauth, {
-			expires: addMinutes(new Date(), 15)
+		response.cookie(constants.AUTH_TOKEN, session.basic, {
+			expires: addMinutes(new Date(), constants.AUTH_EXPIRES_IN),
+			httpOnly: true
 		});
-		response.setHeader(constants.AUTH_TOKEN, session.oauth);
+		response.cookie(constants.REFRESH_TOKEN, session.refresh, {
+			expires: addMinutes(new Date(), constants.REFRESH_EXPIRES_IN),
+			httpOnly: true
+		});
+
+		response.setHeader(constants.AUTH_TOKEN, session.basic);
+		response.setHeader(constants.REFRESH_TOKEN, session.refresh);
+
+		return response.status(HttpStatus.CREATED).send();
+	}
+
+	@Post('refresh_token')
+	@ApiOkResponse()
+	async refresh(
+		@Request() request: eRequest,
+		@Response() response: eResponse
+	) {
+		const basic =
+			request.cookies[constants.AUTH_TOKEN] ??
+			request.headers?.authorization;
+		const refresh =
+			request.cookies[constants.REFRESH_TOKEN] ??
+			request.headers?.['x-refresh-token'];
+
+		if (!basic && !refresh)
+			throw new UnauthorizedErr('You make to do login again');
+
+		const session = await this.authService.refresh({ basic, refresh });
+
+		response.cookie(constants.AUTH_TOKEN, session.basic, {
+			expires: addMinutes(new Date(), constants.AUTH_EXPIRES_IN),
+			httpOnly: true
+		});
+		response.cookie(constants.REFRESH_TOKEN, session.refresh, {
+			expires: addMinutes(new Date(), constants.REFRESH_EXPIRES_IN),
+			httpOnly: true
+		});
+
+		response.setHeader(constants.AUTH_TOKEN, session.basic);
+		response.setHeader(constants.REFRESH_TOKEN, session.refresh);
 
 		return response.status(HttpStatus.CREATED).send();
 	}
@@ -51,6 +92,7 @@ export class AuthController {
 		);
 
 		response.cookie(constants.AUTH_TOKEN, '', { expires: new Date(0) });
+		response.cookie(constants.REFRESH_TOKEN, '', { expires: new Date(0) });
 
 		return response.status(HttpStatus.ACCEPTED).send();
 	}
