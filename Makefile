@@ -17,6 +17,7 @@ run:
 	@./scripts/gen-envs
 	@echo -e "$(OK_COLOR)==> Starting application...$(NO_COLOR)"
 	docker-compose up -d
+	@echo -e "$(OK_COLOR)==> Run dynamodb-admin $(NO_COLOR)"
 
 .PHONY: stop
 stop:
