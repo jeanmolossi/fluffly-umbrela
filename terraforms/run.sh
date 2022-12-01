@@ -22,8 +22,7 @@ cmdPath="$PWD/terraforms"
 configPath="configs"
 baseVarFile="base.tfvars"
 varFile="vars.tfvars"
-# services="ecr rds ecs"
-services="ecs"
+services="ecr rds ecs"
 
 echo "Running terraform $ACTION"
 

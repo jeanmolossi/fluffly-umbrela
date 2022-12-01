@@ -155,11 +155,11 @@ resource "aws_ecs_task_definition" "this" {
         },
         {
           name  = "DB_USER"
-          value = var.rds.username
+          value = var.rds_user.username
         },
         {
           name  = "DB_PASSWORD"
-          value = var.rds.password
+          value = var.rds_user.password
         },
         {
           name  = "DB_NAME",

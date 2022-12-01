@@ -46,9 +46,6 @@ variable "rds" {
     is_public             = bool
     backup_retention_days = number
     storage_type          = string
-
-    username = string
-    password = string
   })
 }
 
