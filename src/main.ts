@@ -1,11 +1,12 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import * as cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import 'reflect-metadata';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './shared/infra/http-exception.filter';
+// import like commonjs - issue in import esmodule
+const cookie_parser = require('cookie-parser');
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule, {
@@ -14,8 +15,7 @@ async function bootstrap() {
 		bufferLogs: true
 	});
 
-	// @ts-ignore
-	app.use(cookieParser());
+	app.use(cookie_parser());
 	app.enableCors({
 		origin: [
 			'http://localhost',
