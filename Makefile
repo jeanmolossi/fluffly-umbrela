@@ -28,3 +28,19 @@ stop:
 logs:
 	@echo -e "$(OK_COLOR)==> Connecting to container...$(NO_COLOR)"
 	docker logs -f fluffly_umbrela_api -n 30
+
+.PHONY: init
+init:
+	@echo -e "$(OK_COLOR)==> Initializing infra...$(NO_COLOR)"
+	@./terraforms/run.sh init
+
+.PHONY: deploy
+deploy:
+	@echo -e "$(OK_COLOR)==> Applying infra...$(NO_COLOR)"
+	@./terraforms/run.sh plan
+	@./terraforms/run.sh apply
+
+.PHONY: destroy
+destroy:
+	@echo -e "$(OK_COLOR)==> Destroying infra...$(NO_COLOR)"
+	@./terraforms/run.sh destroy

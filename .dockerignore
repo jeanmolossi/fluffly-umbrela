@@ -1,0 +1,7 @@
+.docker
+.idea
+.vscode
+.github
+.git
+coverage
+dist

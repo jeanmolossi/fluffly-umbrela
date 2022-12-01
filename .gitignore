@@ -11,3 +11,5 @@ coverage/
 
 .env.*.local
 !.env.example
+
+terraforms/*/.terraform*

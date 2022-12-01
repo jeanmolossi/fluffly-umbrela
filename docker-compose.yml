@@ -3,7 +3,9 @@ version: '3'
 services:
     fluffly_umbrela_api:
         container_name: fluffly_umbrela_api
-        build: .
+        build:
+            context: .
+            dockerfile: Dockerfile.dev
         volumes:
             - ./src:/home/app/src
             - ./node_modules:/home/app/node_modules
